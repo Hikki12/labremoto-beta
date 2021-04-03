@@ -1,0 +1,547 @@
+.section {
+    padding-top: 100px;
+}
+
+.title {
+    text-align: center;
+}
+
+.panel__container {
+    /* border: 2px solid purple; */
+    padding-left: 5em;
+    padding-right: 5em;
+
+}
+.card-body {
+    z-index: 0 !important;
+}
+
+.video {
+    /* border: 2px solid blue; */
+    width: 495px;
+    height: 400px; 
+
+}
+
+.video__panel {
+    border: 2px solid rgba(0,0,0, 0.05);
+    display:flex;
+    justify-content: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.controls__panel {
+    border: 2px solid rgba(0,0,0, 0.05);
+    padding: 15px;
+}
+
+.radios__container {
+    height: 150px;
+    width: 100%;
+    /* border: 4px solid orange; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+    
+.radios__container--button {
+    display: flex;
+        
+}
+
+.light__container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+}
+
+
+/*BOTONES SELECTORES DE RADIO*/
+.radios__container {
+    height: 150px;
+    width: 100%;
+    /* border: 4px solid orange; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    }
+    
+    .radios__container--button {
+        display: flex;
+         
+    }
+    
+    .radios__container input[type=radio] {
+    order: 1;
+    z-index: 6;
+    /* border: 2px solid green; */
+    width: 30px;
+    height: 30px;
+    visibility: hidden;
+    background-color: red;
+    
+    }
+    .radios__container input[type=radio]:hover {
+    cursor: pointer;
+    
+    
+    }
+    
+    .radios__container label {
+    width: 120px;
+    /* border: 2px solid deeppink; */
+    font-weight: bold;
+    color: #5f5959;
+    font-size: 1.35em;
+    order:2;
+    z-index: 3;
+    cursor: pointer;
+    transition: border .25s linear;
+    -webkit-transition: all 0.25s linear;
+    text-align: right;
+    margin-left: -30px;
+    }
+    
+    
+    .radios__container .check {
+    position: absolute;
+    border: 4px solid rgb(95, 93, 93);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    z-index: 2;
+    -webkit-transition: border .25s linear;
+    }
+    
+    .radios__container .check::before { 
+        content: '';
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;    
+        transition: background 0.25s linear;
+        -webkit-transition: background 0.25s linear;
+    }
+    
+    /*Radio color*/
+    
+    #r1Btn:checked ~ .check{
+    border: 4px solid rgb(14, 160, 204);
+    background: radial-gradient(rgb(14, 160, 204) 40%, rgba(255, 0, 0, 0) 50%);
+    }
+    
+    #r1Btn:checked ~ .check::before{
+    background: rgb(14, 160, 204);
+    background: radial-gradient(rgb(14, 160, 204) 40%, rgba(255, 0, 0, 0) 50%);
+    }
+    
+    /**/
+    #r2Btn:checked ~ .check{
+    border: 4px solid rgb(255, 166, 0);
+    background: radial-gradient(rgb(255, 166, 0) 40%, rgba(255, 0, 0, 0) 50%);
+    }
+    
+    #r2Btn:checked ~ .check::before{
+    background: rgb(255, 196, 0);
+    background: radial-gradient(rgb(255, 166, 0) 40%, rgba(255, 0, 0, 0) 50%);
+    }
+    
+    
+    /**/
+    #r3Btn:checked ~ .check{
+    border: 4px solid rgb(60, 154, 0);
+    background: radial-gradient(rgb(60, 154, 0) 40%, rgba(255, 255, 255,0) 50%);
+    }
+    
+    #r3Btn:checked ~ .check::before{
+    background: rgb(60, 154, 0);
+    background: radial-gradient(rgb(60, 154, 0) 40%, rgba(255, 255,255, 0) 50%);
+    }
+    
+    
+    /* SLIDER */
+    .slider__container {
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    /* border: 4px solid aqua; */
+    }
+    
+    .box-minmax { 
+        margin-top: 20px; 
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        color: #5f5959;
+    }
+    
+    #sliderLabelValue {
+        position: relative;
+        left:50%;
+        transform-origin: center center;
+        display: block;
+        width: 120px;
+        height: 120px;
+        background: transparent;
+        border-radius: 50%;
+        line-height: 30px;
+        text-align: center;
+        font-weight: bold;
+        padding-top: 15px;
+        box-sizing: border-box;
+        border: 2px solid #837b7b;
+        margin-top: -20px;
+        margin-left: -60px;
+        left: attr(value);
+        color: rgb(189, 101, 145);
+        font-style: normal;
+        font-weight: normal;
+        line-height: normal;
+        font-size: 50px;
+      }
+    #sliderLabelValue::after {
+        content: "rpm";
+        display: block;
+        font-size: 20px;
+        letter-spacing: 0.07em;
+        margin-top: -2px;
+        color: #303030;
+    }
+     
+    
+    .range-slider {
+        margin-top: 30vh;
+      }
+      
+      .rs-range {
+        margin-top: 29px;
+        width: 100%;
+        -webkit-appearance: none;
+      }
+      .rs-range:focus {
+        outline: none;
+      }
+      .rs-range::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 2px;
+        cursor: pointer;
+        box-shadow: none;
+        background: #837b7b;
+        border-radius: 0px;
+        border: 0px solid #010101;
+      }
+      .rs-range::-moz-range-track {
+        width: 100%;
+        height: 1px;
+        cursor: pointer;
+        /* box-shadow: none; */
+        background: #918e8e;
+        border-radius: 0px;
+        border: 0px solid #010101;
+      }
+      .rs-range::-webkit-slider-thumb {
+        box-shadow: none;
+        border: 0px solid #cabdbd;
+        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: rgb(189, 101, 145);
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+      }
+      .rs-range::-moz-range-thumb {
+        box-shadow: none;
+        border: 0px solid #303030;
+        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
+        height: 42px;
+        width: 22px;
+        border-radius: 22px;
+        background: white;
+        cursor: pointer;
+        -webkit-appearance: none;
+        margin-top: -20px;
+      }
+      .rs-range::-moz-focus-outer {
+        border: 0;
+      }
+    
+    /*-----------------*/
+    @keyframes light-pulse{
+        0% {
+            box-shadow: 0 0 0 0px rgb(255, 181, 32);
+        }
+        100% {
+            box-shadow: 0 0 0 10px rgba(255, 159, 4, 0.2);
+        }
+    }
+    
+    .light__container {
+        width: 200px;
+        height: 200px;
+        display: flex;
+    }
+    .light__container label {
+        margin-top: 10px;
+        margin-left: 20px;
+        padding: 0px;
+        border: 4px solid rgb(51, 51, 51);
+        width: 30px;
+        height: 30px;
+        border-radius: 40px;
+        z-index: 0;
+        
+    }
+    .light__container input[type="checkbox"] {
+        position: absolute;
+        left: -9999px;
+    }
+    
+    .light__container input[type="checkbox"]:checked + label {
+        background-color: #f3aa21;
+        animation: light-pulse 5s infinite;
+    }
+    
+    .light__container  label:hover {
+        cursor: pointer;
+    }
+    
+    /*--------*/
+    @keyframes shadow-pulse{
+    0% {
+        box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
+    }
+    }
+    
+    
+    
+    @keyframes rot360 {
+    0% {
+        transform: rotate(0);
+    }
+    
+    100% {
+        transform: rotate(360deg);
+    }
+    }
+    
+    
+    @keyframes rot360_2{
+    0% {
+        transform: rotate(360deg);
+    }
+    
+    100% {
+        transform: rotate(0);
+    }
+    }
+    
+    
+    /* wise Button*/
+    
+    .clockwise__container {
+        width: 100%;
+        height: 70px;
+        /* border: 6px solid gray; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .clockwise__container label {
+    
+        width: 100%;
+        height: 100%;
+        
+        z-index: 2;
+        /* border-color: transparent; */
+        /* border: 2px solid green;     */
+    }
+    
+    .controls__container label:hover{
+        cursor: pointer;
+    }
+    
+    .clockwise__container input[type="checkbox"] {
+        position: absolute;
+        left: -9999px;
+        z-index: 2;
+    }
+    
+    .clockwise__container .curve-arrow {
+        position: absolute;
+        z-index: 1;
+        width: 50px;
+        height: 50px;
+        border: 6px solid greenyellow;
+        border-right-color:transparent;
+        border-radius: 50%;
+        animation: rot360 3s infinite;
+    }
+    
+    .clockwise__container input[type="checkbox"]:checked + label + div.curve-arrow {
+        border: 6px solid greenyellow;
+        border-top-color:transparent;
+        background: transparent;
+        animation: rot360_2 3s infinite;
+        
+    }
+        
+    .clockwise__container input[type="checkbox"]:checked + label + div.curve-arrow:after {
+        top: -5px; 
+        left: 25px;
+        border-left-color: greenyellow;
+        border-bottom-color: transparent;
+    }
+        
+        
+    .clockwise__container .curve-arrow:after {
+        content: "";
+        position: absolute;
+        
+        border: 30px solid #ffffff;
+        top: -15px; 
+        left: 20px;
+        
+        border-bottom-color: greenyellow;
+        border-top-width: 0;
+        border-right-width: 0;
+        border-left-color: transparent;
+        
+    }
+    
+    
+    /*PLAY*/
+    
+    .play__box {
+        /* border: 5px solid violet; */
+        display: flex;
+        width: 100%;
+        height: 100px;
+    }
+    /*PlayBtn*/
+    .play__container {
+        /* border: 5px solid rgb(0, 110, 255); */
+    
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+    
+    .play__container label {
+        display: block;
+        box-sizing: border-box;
+        width: 60px;
+        height: 60px;
+        border-color: transparent transparent transparent #202020;
+        transition: 200ms all ease;
+        cursor: pointer;
+        border-style: double;
+        border-width: 0px 0 0px 60px;
+    }
+    .labelBtn {
+        color: #555555;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    .play__container input[type="checkbox"] {
+        position: absolute;
+        left: -9999px;    
+    }
+    
+    .play__container input[type="checkbox"]:checked + label {
+        border-style: solid;
+        border-width: 30px 0 30px 60px;
+      }
+    
+    .play__container input[type="checkbox"]:focus + label {
+        box-shadow: 0 0 5px lightblue;
+    }
+    
+    /*RecordBtn*/
+    @keyframes shadow-pulse{
+        0% {
+            box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+            box-shadow: 0 0 0 35px rgba(0, 0, 0, 0);
+        }
+    }
+    
+    
+    .record__container {
+        /* border: 5px solid yellow; */
+        margin-left: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    
+    }
+    
+    .record__container label {
+        display: block;
+        box-sizing: border-box;
+        height: 60px;
+        width: 60px;
+        transition: 200ms all ease;
+        cursor: pointer;
+        border: 4px solid black;
+        border-radius: 35px;
+        background: blanchedalmond;
+        
+    }
+    
+    .record__container input[type="checkbox"] {
+        position: absolute;
+        left:-9999px;
+    }
+    
+    .record__container input[type="checkbox"]:checked + label {
+        height: 60px;
+        width: 60px; 
+        border: 4px solid #a7a7a7;
+        background:rgba(221, 13, 31, 0.973);
+        animation: shadow-pulse 1s infinite;
+    }
+    
+    .record__container + label{
+        box-shadow: 0 0 5px rgb(89, 18, 170);
+        
+    }
+    
+    #msg {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #221e1e;
+    
+    }
+    
+    .recordTime__container {
+    display: flex;
+    width: 100%;
+    margin-top: 30px;
+    
+    }
+    
+    .recordTime__container span {
+    font-weight: bold;
+    }
+    
+    .recordTime__container input {
+    margin-left: 20px;
+    border:2px solid #303030;
+    }
+    

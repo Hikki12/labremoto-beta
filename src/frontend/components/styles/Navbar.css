@@ -1,0 +1,28 @@
+header {
+    transition: all 0.5s;
+    z-index: 997;
+    transition: all 0.5s;
+    padding: 15px 0;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.logo__text {
+    font-size: 1.8rem;
+    color:#5777BA;
+}
+
+.collapse {
+    padding-left: 50%;
+}
+
+.nav-link {
+    color: #797878 !important; 
+}
+
+.link-enhanced {
+    background: #5777BA;
+    color: white !important;
+    border-radius: 20px;
+    width: 160px;
+    text-align:center;
+}

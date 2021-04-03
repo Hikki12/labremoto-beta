@@ -1,0 +1,43 @@
+.mockup__form--section {
+    margin-top: 8rem;
+}
+
+.section__title{
+    padding-bottom: 10px;
+}
+.title {
+    font-size: 1.1rem;
+    font-weight: bold;  
+}
+
+.mockup__form--container {
+    margin-top: 35px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    width: 80%;
+    margin-left: 10%;
+}
+
+.mockup__form--title {
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
+    height: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.title__form {
+    font-size: 1.1rem;
+}
+
+.mockup__form--body {
+    padding:40px 20px;
+}
+
+.mockup__form--buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}

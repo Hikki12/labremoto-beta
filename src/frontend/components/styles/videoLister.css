@@ -1,0 +1,33 @@
+.container__modal {
+    margin-top: 1rem;
+    margin-left: 1.5rem;
+}
+
+.container___video {
+    height: 45rem;
+    margin-left: 1rem;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 2rem;
+    border: 0.25px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+
+
+}
+
+.video__player{
+    width: 43rem;
+    border: 2px solid gray;
+}
+
+.container__video--description {
+    height: 15rem;
+    padding-top: 2rem;
+}
+
+.container__list{
+    padding-top: 2rem;
+    border: 0.25px solid rgba(0, 0, 0, 0.08);
+    border-radius: 6px;
+    margin-left:1rem;
+}

@@ -1,0 +1,28 @@
+{
+    "mockups":[
+        {
+            "id": 1,
+            "name":"Movimiento Circular Uniforme",
+            "description": "Something...",
+            "url": "/mcu",
+            "state": "active"
+        },
+        {
+            "id": 2,
+            "name": "Caída Libre",
+            "description":"Something...",
+            "url": "/freefall",
+            "state": "active"
+        }
+    ],
+    "videos":[
+        {
+            "id":"mcu",
+            "videos":["default"]
+        },
+        {
+            "id":"freefall",
+            "videos":["default"]
+        }
+    ]
+}

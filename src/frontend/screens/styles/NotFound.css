@@ -1,0 +1,9 @@
+.not__found {
+    margin-top: 12rem;
+}
+
+.not__found h1 {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 25px;
+}
