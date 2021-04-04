@@ -1,32 +1,18 @@
-image: node:14.16.0
-pipelines:
-  branches:
-    master:
-      - step:
-          name: labremoto-beta
-          caches:
-            - node
-          script:
-            - rm -rf package-lock.json
-            - rm -rf node_modules
-            - npm install
-            - npm run start
-      - step:
-           name: Create artifact
-           script: 
-             - git archive --format=tar.gz master -o application.tar.gz 
-           artifacts: 
-           - application.tar.gz
-      - step:
-           name: Deploy to heroku
-           deployment: production
+ image: node:14.16.0
+ 
+ # Doing a full clone to be able to push back to Heroku.
+ clone:
+   depth: full
+ 
+ pipelines:
+   branches:
+     # When code is pushed to the production branch it is deployed automatically to the production environment.
+     production:
+       - step:
            caches:
              - node
            script:
-             - pipe: atlassian/heroku-deploy:1.1.4
-               variables:
-                 HEROKU_API_KEY: $HEROKU_API_KEY
-                 HEROKU_APP_NAME: $HEROKU_APP_NAME
-                 ZIP_FILE: "application.tar.gz"
-                 WAIT: 'true'
-                 
+             - npm install
+             - npm run start
+             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git production:master
+ 
