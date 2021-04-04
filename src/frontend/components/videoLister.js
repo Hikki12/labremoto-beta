@@ -30,7 +30,7 @@ class videoLister extends React.Component {
                     <div className="container__video--player ">
                     <Player
                         playsInline
-                        src="http://localhost:3000/stream/video/mcu/fuego.mp4"
+                        src="http://localhost:3000/stream/video/mcu/test.mp4"
                     />
                     </div> 
                     <hr className="col-sm-5"/>
