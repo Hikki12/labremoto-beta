@@ -6,7 +6,8 @@ import { NavLink } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/Panel.css';
 
-const api = "http://localhost:8000/mockups";
+const api = "http://localhost:3000/mockups";
+
 
 class PanelPage extends React.Component { 
         state = {
@@ -21,13 +22,12 @@ class PanelPage extends React.Component {
 
         requestMockups(){
             axios.get(api)
-                .then((res) =>{
+                .then((res) => {
                     this.setState({
                         loading: false,
-                        mockups: res.data,
-                    })
-                        
-                })
+                        mockups: res.data.mockups,
+                    });
+                });
         }
 
         render(){

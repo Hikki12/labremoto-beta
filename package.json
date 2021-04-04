@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "babel-node src/backend/server.js",
     "dev": "nodemon --exec babel-node src/backend/server.js",
     "fakeapi": "json-server --watch initialState.json --port 8000"
   },
