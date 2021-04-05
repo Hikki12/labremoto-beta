@@ -1,17 +1,37 @@
 .section {
-    padding-top: 100px;
+    padding-top: 60px;
 }
 
-.title {
+.mockup__title {
+    color: #7e7d7d;
     text-align: center;
+    font-size: 2rem;
+    margin-top: -1rem;
+    margin-bottom: 2rem;
 }
 
-.panel__container {
-    /* border: 2px solid purple; */
-    padding-left: 5em;
-    padding-right: 5em;
-
+.view__container {
+    margin-left: 7.5rem !important;
+    margin-right: 7.5rem !important;
+    margin-bottom: 1rem;
 }
+
+.image__container {
+    border: 2px solid rgba(0,0,0, 0.05);
+    margin-right: -2rem;
+    padding-top: 4rem;
+}
+
+.controls__container{ 
+    border: 2px solid rgba(0,0,0, 0.05);
+    padding-top: 4rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
+    margin-left: 2rem;
+    z-index: 0;
+}
+
+
 .card-body {
     z-index: 0 !important;
 }
@@ -21,19 +41,6 @@
     width: 495px;
     height: 400px; 
 
-}
-
-.video__panel {
-    border: 2px solid rgba(0,0,0, 0.05);
-    display:flex;
-    justify-content: center;
-    padding-top: 60px;
-    padding-bottom: 60px;
-}
-
-.controls__panel {
-    border: 2px solid rgba(0,0,0, 0.05);
-    padding: 15px;
 }
 
 .radios__container {

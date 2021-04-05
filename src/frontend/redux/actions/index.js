@@ -7,3 +7,8 @@ export const addNewMockup = payload => ({
     type: ADD_MOCKUP, 
     payload,
 });
+
+export const playVideo = (videoName) => ({
+    type: 'PLAY_VIDEO',
+    videoName
+});

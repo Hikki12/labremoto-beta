@@ -8,7 +8,11 @@ const reducer = (state={}, action) => {
                 ...state,
                 mockups: state.mockups
             })
-    
+        case 'PLAY_VDEO':
+            return({
+                ...state,
+                videoName: state.videoName
+            });
         default:
             return state;
     }

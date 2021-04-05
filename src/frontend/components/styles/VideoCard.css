@@ -1,0 +1,33 @@
+.vcard__container{
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    border: 2px solid rgb(183, 183, 199);    
+    height: 100px;
+    margin-right: 1.5rem;
+}
+
+.vcard__container:hover{
+    cursor: pointer;
+}
+
+.vcard__image {
+    background-color: gray;
+    height: 100%;
+    width: 30%;
+}
+
+.vcard__info {
+    padding-left: 2.5%;
+}
+
+.video__title {
+    margin-top: 2px;
+}
+
+.vcard__info--buttons{
+    margin-top: 13%;
+}
+
+.button__video--card {
+    margin-right: 1rem;
+}

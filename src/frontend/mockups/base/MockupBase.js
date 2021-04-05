@@ -68,27 +68,26 @@ class MockupBase extends React.Component {
 
                 <div className="section__title">
                      {this.props.name
-                     ?<div className="title">{this.props.name}</div>
-                     :<div className="title">Mockup Name</div>
+                     ?<div className="title mockup__title">{this.props.name}</div>
+                     :<div className="title mockup__title">Mockup Name</div>
                      }             
                 </div>
      
-                <div className="row mx-auto p-3">
-                     <div className="col-sm-6">
-                        <div className="row card">
-                            <div className="card-body">
+                <div className="row view__container">
+                     <div className="col-sm-6 image__container">
+                        <div className="image__container--elements ">
                                 <img className="video" id="video-img" ref={this.videoImg}/>
                                 <div className="light__container">
                                     <input id="lightBtn" type="checkbox"/>
                                     <label htmlFor="lightBtn"></label>
                                 </div>
                                 <button className="btn btn-success" onClick={this.openModal}>Results</button>
-                            </div>
                         </div>
                      </div>
-                     <div className="col-sm-6">
-                        <div className="row card">
-                            <div className="card-body">
+                     
+                     <div className="col-sm-6 controls__container">
+                        <div className="controls__container--elements">
+
                                 <h5 className="card-title text-center"><strong> Controles de la maqueta</strong> </h5>
                                 <p className="card-text text-center">
                                     <i>Seleccione la acción.</i>
@@ -145,7 +144,6 @@ class MockupBase extends React.Component {
                                         <input type="number" defaultValue="20" id="timeInput" name="tentacles" min="10"
                                             max="100"/>
                                     </div>
-                            </div>
                         </div>
                      </div>
                 </div>

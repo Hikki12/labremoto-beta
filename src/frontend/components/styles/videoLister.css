@@ -11,8 +11,6 @@
     padding-top: 2rem;
     border: 0.25px solid rgba(0, 0, 0, 0.08);
     border-radius: 6px;
-
-
 }
 
 .video__player{
@@ -30,4 +28,8 @@
     border: 0.25px solid rgba(0, 0, 0, 0.08);
     border-radius: 6px;
     margin-left:1rem;
+}
+
+.download__buttons {
+    padding-left: 15px;
 }

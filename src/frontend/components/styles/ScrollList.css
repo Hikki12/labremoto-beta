@@ -1,0 +1,15 @@
+.scroll__container {
+    padding-left: 10px;
+    margin-left: 1.5rem !important;
+    margin-right: 1rem !important;
+}
+
+.sizer__container:focus {
+    border:0.5px solid #b3b3b3;
+}
+
+.scroll__buttons--container {
+    height: 80px;
+    border: 2px solid blue;
+    margin-bottom: 15px;
+}

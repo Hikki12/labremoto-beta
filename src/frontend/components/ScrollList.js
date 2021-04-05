@@ -1,7 +1,8 @@
 import React from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { List, AutoSizer } from 'react-virtualized';
-
+import VideoCard from './VideoCard';
+import './styles/ScrollList.css';
 
 const listStyle = { overflowX: false, overflowY: false };
 
@@ -18,6 +19,10 @@ const rowStyle = {
 class ScrollList extends React.Component {
     list = React.createRef();
 
+    constructor(props){
+      super(props);
+    }
+
     handleScroll = e => {
         const { scrollTop, scrollLeft } = e.target;
         const { Grid } = this.list.current;
@@ -25,20 +30,31 @@ class ScrollList extends React.Component {
       };
     
       renderRow = ({ index, key, isScrolling, style }) => {
-        const { countries } = this.props;
+        //const { countries } = this.props;
         return (
           <div key={key} style={style}>
-            <div style={rowStyle}>
-              {countries[index].code} - {countries[index].name}
-            </div>
+              <VideoCard data={this.props.videos[index]}/>
           </div>
         );
       };
 
+
     render(){
-        return(
-            <div style={{ width: 200, height: 200 }}>
-                <AutoSizer>
+        if(!this.props.videos){
+          return(
+            <div className="scroll__container">
+              Waiting...
+            </div>
+          );
+        }else {
+          return(
+
+            <div className="scroll__container" style={{ width: 600, height: 550 }}>
+                <div className="scroll__buttons--container">
+
+                </div>
+
+                <AutoSizer className="sizer__container">
                 {({ height, width }) => (
                 <Scrollbars
                 onScroll={this.handleScroll}
@@ -48,17 +64,18 @@ class ScrollList extends React.Component {
                     <List
                     height={height}
                     width={width}
-                    rowHeight={25}
+                    rowHeight={150}
                     rowRenderer={this.renderRow}
                     style={listStyle}
                     ref={this.list}
-                    rowCount={countries.length}
+                    rowCount={this.props.videos.length}
                     />
                 </Scrollbars>
                 )}
                 </AutoSizer>
             </div>
         );
+        }
     }
 }
 

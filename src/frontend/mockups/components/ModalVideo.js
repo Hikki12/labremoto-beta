@@ -12,9 +12,8 @@ const customStyles = {
 class ModalVideo extends React.Component {
     constructor(props){
         super(props);
-        console.log("Modal props: ", props);
-        
     }
+    
     render(){
         return(
             <div>
