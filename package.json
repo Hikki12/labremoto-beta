@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/backend/server.js",
+    "start": "node /src/backend/server.js",
     "dev": "nodemon --exec babel-node src/backend/server.js",
     "fakeapi": "json-server --watch initialState.json --port 8000",
     "build": "webpack --mode production"
@@ -39,7 +39,11 @@
     "redux-thunk": "^2.3.0",
     "socket.io": "^2.4.1",
     "socket.io-client": "^2.4.0",
-    "video-react": "^0.14.1"
+    "video-react": "^0.14.1",
+    "webpack": "^5.24.4",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-middleware": "^4.1.0",
+    "webpack-livereload-plugin": "^3.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.10",
