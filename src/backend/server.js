@@ -1,15 +1,27 @@
-import express from 'express';
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import webpackConfig from '../../webpack.config';
+//import express from 'express';
+const express = require('express');
+const app = express();
+// import webpack from 'webpack';
+// import webpackDevMiddleware from 'webpack-dev-middleware';
+const webpackConfig = require('../../webpack.config.babel');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
 const managerIO = require('./mockups/managerIO');
 //
 const reservationRouter = require('./routes/reservation');
 const mockupRouter = require('./routes/mockups');
 const videoRouter = require('./routes/videos');
 //const SocketIO = require('socket.io');
-// Initializing packages
-const app = express();
+const path = require('path');
+
+
+const DIST_DIR = path.join(__dirname, './dist'); // NEW
+const HTML_FILE = path.join(DIST_DIR, 'index.html'); // NEW
+
+
+app.get('/', (req, res) => {
+	res.sendFile(HTML_FILE); // EDIT
+});
 
 // Set Port
 app.set('port', process.env.PORT||3000);
