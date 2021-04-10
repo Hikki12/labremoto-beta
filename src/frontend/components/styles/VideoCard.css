@@ -1,19 +1,36 @@
-.vcard__container{
+.vcard__container {
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
-    border: 2px solid rgb(183, 183, 199);    
-    height: 100px;
-    margin-right: 1.5rem;
+    border: 1px solid rgb(183, 183, 199);    
+    height: 110px;
+    margin-right: 0.25rem;
+    margin-left: 0.5rem;
+    padding-left: 0.1rem;
+
 }
 
-.vcard__container:hover{
+
+.vcard__container:hover {
     cursor: pointer;
+}
+
+.vcard__container:focus {
+    border: 0px transparent black;
+    box-shadow: 2px 11px 30px 2px rgba(13, 125, 216, 0.5);
 }
 
 .vcard__image {
     background-color: gray;
     height: 100%;
     width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.vcard__image h1 {
+    color: white;
 }
 
 .vcard__info {

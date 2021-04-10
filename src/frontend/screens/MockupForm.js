@@ -59,7 +59,7 @@ const MockupForm = () =>{
                                 <textarea name="description" className="form-control" cols="62" rows="5"></textarea>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="form-group row">
                             <label htmlFor="" className="col-sm-2">URL de la Maqueta:</label>
                             <div className="col-sm-10">
                                 <input name="url" type="text" className="form-control" placeholder="Nombre..."/>

@@ -23,17 +23,25 @@ class ScrollList extends React.Component {
       super(props);
     }
 
+
     handleScroll = e => {
         const { scrollTop, scrollLeft } = e.target;
         const { Grid } = this.list.current;
         Grid.handleScrollEvent({ scrollTop, scrollLeft });
       };
     
-      renderRow = ({ index, key, isScrolling, style }) => {
+
+    renderRow = ({ index, key, isScrolling, style }) => {
         //const { countries } = this.props;
         return (
           <div key={key} style={style}>
-              <VideoCard data={this.props.videos[index]}/>
+              <VideoCard 
+              data={this.props.videos[index]}
+              onDemand={this.props.onDemand}
+              downloadVideo={this.props.downloadVideo}
+              dowloadFile={this.props.dowloadFile}
+              openDialog={this.props.openDialog}
+              />
           </div>
         );
       };
@@ -49,10 +57,10 @@ class ScrollList extends React.Component {
         }else {
           return(
 
-            <div className="scroll__container" style={{ width: 600, height: 550 }}>
-                <div className="scroll__buttons--container">
+            <div className="scroll__container" style={{ width: 500, height: 550 }}>
+                {/* <div className="scroll__buttons--container">
 
-                </div>
+                </div> */}
 
                 <AutoSizer className="sizer__container">
                 {({ height, width }) => (
@@ -60,6 +68,7 @@ class ScrollList extends React.Component {
                 onScroll={this.handleScroll}
                 style={{ height, width }}
                 autoHide
+                
                 >
                     <List
                     height={height}
@@ -69,6 +78,7 @@ class ScrollList extends React.Component {
                     style={listStyle}
                     ref={this.list}
                     rowCount={this.props.videos.length}
+                    className="scroll__items"
                     />
                 </Scrollbars>
                 )}

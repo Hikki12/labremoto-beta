@@ -4,6 +4,30 @@ const router = new express.Router();
 const fs = require('fs');
 const path = require('path');
 
+var multer  = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      const field = file.fieldname;
+      const filename = file.originalname;
+      const rootPath = path.join(__dirname, "..", "uploads");
+      const mockupname = req.params.mockupname;
+      const rootVideo = path.join(rootPath, mockupname, "videos");
+      const rootFiles = path.join(rootPath, mockupname, "files");
+  
+      if(field === "video"){
+            cb(null, rootVideo);
+      }
+      if(field === "file"){
+            cb(null, rootFiles);
+      }
+      
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+});
+   
+  var upload = multer({ storage: storage })
 /**
  * @endpoint : /list/videos/:mockupname
  * @method : GET 
@@ -13,9 +37,12 @@ router.get("/list/videos/:mockupname", (req, res) => {
     console.log("Mockup id : ", mockupName);
 
     getVideosList(mockupName, (rootPath, files) => {
-        console.log("Path: ", rootPath);
-        console.log("Files: ", files );
-        res.status(200).send(files)
+        if(files){
+            res.status(200).send(files);
+        }else{
+            res.status(200).send([])
+        }
+        
     });
     //res.end();
 });
@@ -63,11 +90,6 @@ router.get("/stream/video/:mockupname/:filename", (req, res) => {
 
     // Stream the video chunk to the client
     videoStream.pipe(res);    
-    // console.log("Video size: ", videoSize);
-
-    // console.log("*** Video para streaming solicitado ***");
-    // console.log(mockupName, videoName);
-
 });
 
 
@@ -76,7 +98,7 @@ router.get("/stream/video/:mockupname/:filename", (req, res) => {
  * @method : GET 
 **/
 
-router.post('/upload-video/:mockuname', async (req,res) => {
+router.post('/upload-video/:mockuname', (req,res) => {
     console.log("A video was uploaded by: ");
     res.end();
 });
@@ -86,8 +108,86 @@ router.post('/upload-video/:mockuname', async (req,res) => {
  * @method : GET 
 **/
 router.get('/download-video/:mockupname/:filename', (req, res) => {
-    console.log("end video");
+    const rootPath = path.join(__dirname, "..", "uploads");
+    const filename = req.params.filename;
+    const mockupname = req.params.mockupname;
+    const filePath = path.join(rootPath, mockupname,"videos",filename);
+    console.log("Downloading: ",filename );
+    fs.access(filePath, (err)=>{
+        if(!err){
+            res.download(filePath, filename);
+        }else{
+            res.end();
+            //console.log("File doesn't exist");
+        }
+    });
+    
+});
+
+
+/**
+ * @endpoint : /download-file/:mockupname/:filename
+ * @method : GET 
+**/
+router.get('/download-file/:mockupname/:filename', (req, res) => {
+    const rootPath = path.join(__dirname, "..", "uploads");
+    const videoname = req.params.filename;
+    const filename = videoname.substring(0, videoname.length - 4) + ".xlsx";
+    const mockupname = req.params.mockupname;
+    const filePath = path.join(rootPath, mockupname, "files", filename);
+    console.log("Downloading: ",filename );
+    fs.access(filePath, (err)=>{
+        if(!err){
+            res.download(filePath, filename);
+        }else{
+            res.end();
+        }
+    });
+    
+});
+
+
+/**
+ * @endpoint : /delete-video/:mockupname/:filename
+ * @method : DELETE
+**/
+
+router.delete('/delete-video/:mockupname/:filename', (req, res) => {
+    const rootPath = path.join(__dirname, "..", "uploads");
+    const videoname = req.params.filename;
+    const mockupname = req.params.mockupname;
+    const filename = videoname.substring(0, videoname.length - 4) + ".xlsx";
+    const rootVideo = path.join(rootPath, mockupname, "videos");
+    const rootFiles = path.join(rootPath, mockupname, "files");
+    const videoPath = path.join(rootVideo, videoname);
+    const filePath = path.join(rootFiles, filename);
+    console.log("video path: ", videoPath);
+    console.log("file path: ", filePath);
+
+
+    fs.unlink(filePath, (error) => {
+        if(error){
+            console.log("error file");
+        }
+    });
+
+    fs.unlink(videoPath, (error) => {
+        if(error){
+            console.log("error video");
+            res.end();
+        }else{
+            res.end();
+        }
+    });
+});
+
+/* 
+ * @endpoint : /upload/:mockupname/:filename
+ * @method : DELETE
+*/
+
+router.post('/upload/:mockupname', upload.any(), (req, res, next) =>{
     res.end();
-})
+});
 
 module.exports = router;

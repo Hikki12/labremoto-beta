@@ -23,7 +23,7 @@ class MockupClientIO {
         this.reciveFromServer = null;
     }
 
-    identify(){
+    identify = () => {
       const userName = `User${Math.floor(Math.random() * 1000000)}`;
       this.io.emit("new user", userName, this.name);
     };
@@ -32,6 +32,7 @@ class MockupClientIO {
 
         this.io.on('connect', () => {
             this.identify();
+            this.io.emit(request_updates_route);
         });
 
         this.io.on(streaming_route, (frame64) => {
@@ -46,7 +47,7 @@ class MockupClientIO {
             if(this.reciveFromServer){
                 this.reciveFromServer(data);
             }
-           // socket.emit(response_route_maqueta);
+           this.io.emit(response_route_maqueta);
             console.log("Responding...");
         });
 

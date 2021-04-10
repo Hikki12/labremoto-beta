@@ -22,7 +22,7 @@ class ModalVideo extends React.Component {
                     onRequestClose={this.props.onRequestClose}
                     ariaHideApp={false}
                 >         
-                    <button className="btn btn-primary"onClick={this.props.onRequestClose}> x </button>
+                    <button className="btn btn-primary" onClick={this.props.onRequestClose}> x </button>
                     <VideoLister />
                 </Modal>
             </div>

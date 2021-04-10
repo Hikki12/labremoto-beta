@@ -82,7 +82,7 @@ module.exports = (server) => {
 		});
 
 		// Recive updates coming from the maqueta and send they to the web client
-		socket.on(updates_to_web_route,(data)=>{
+		socket.on(updates_to_web_route, (data) => {
 			socket.to(socket.roomID).emit(updates_to_web_route,data);
 
 		});

@@ -1,0 +1,30 @@
+.continue__modal {
+    height: 14rem;
+    width: 30rem;
+    background: white;
+    position: relative;
+    border-radius:10px;
+    top:120%;
+    left:93%;
+}
+
+.continue__modal--overlay {
+    height: 14rem;
+    width: 40rem;
+    position: fixed;
+    border-radius:10px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.continue__modal--header{
+    margin-top: -2rem;
+}
+
+.continue__modal--container{
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+}
