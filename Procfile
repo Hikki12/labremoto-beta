@@ -1,1 +1,1 @@
-web: node ./src/backend/server.js
+web: npm run start
