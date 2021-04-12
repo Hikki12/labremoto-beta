@@ -2,16 +2,22 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DotEnv = require('dotenv-webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
+const dotenv = require('dotenv').config( {
+    path: path.join(__dirname, '.env')
+} );
+  
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: './src/frontend/index.js',
     output:{
         path: path.resolve(__dirname, 'src/dist'),
         filename:'bundle.js',
+        publicPath: '/',
     },
     resolve: {
         extensions: ['.js', '.jsx'],
@@ -53,14 +59,13 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css'
         }),
-        new DotEnv(),
-        new CleanWebpackPlugin()
+        new DotEnv({
+            path: path.join(__dirname, '.env')
+        })
     ],
-    optimization:{
-        minimize: true,
-        minimizer: [
-            new CssMinimizerPlugin(),
-            new TerserPlugin()
-        ]
+    devServer:{
+        contentBase: path.join(__dirname,'dist'),
+        compress: true,
+        port: 3006
     }
 }

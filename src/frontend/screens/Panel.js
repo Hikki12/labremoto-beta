@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/Panel.css';
 
-const api = "http://localhost:3000/mockups";
+const api = "/mockups";
 
 
 class PanelPage extends React.Component { 

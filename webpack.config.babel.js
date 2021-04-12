@@ -1,9 +1,9 @@
-// import path from 'path'
-// import webpack from 'webpack'
-// import HtmlWebPackPlugin from 'html-webpack-plugin';
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebPackPlugin = require('html-webpack-plugin');
+import path from 'path'
+import webpack from 'webpack'
+import HtmlWebPackPlugin from 'html-webpack-plugin';
+//const path = require('path');
+//const webpack = require('webpack');
+//const HtmlWebPackPlugin = require('html-webpack-plugin');
 // const __dirname = path.resolve(path.dirname(''));
 // console.log("Holaaa", __dirname)
 

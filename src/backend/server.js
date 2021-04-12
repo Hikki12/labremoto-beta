@@ -1,30 +1,41 @@
 //import express from 'express';
 const express = require('express');
 const app = express();
-// import webpack from 'webpack';
-// import webpackDevMiddleware from 'webpack-dev-middleware';
-const webpackConfig = require('../../webpack.config.babel');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
+
 const managerIO = require('./mockups/managerIO');
-//
 const reservationRouter = require('./routes/reservation');
 const mockupRouter = require('./routes/mockups');
 const videoRouter = require('./routes/videos');
-//const SocketIO = require('socket.io');
 const path = require('path');
 
 
-const DIST_DIR = path.join(__dirname, './dist'); // NEW
-const HTML_FILE = path.join(DIST_DIR, 'index.html'); // NEW
+const webpack = require('webpack');
+const middleware = require('webpack-dev-middleware');
+const webpackConfig = require('../../webpack.config.dev');
 
-
-app.get('/', (req, res) => {
-	res.sendFile(HTML_FILE); // EDIT
-});
+//app.use(middleware(webpack(webpackConfig)));
+app.set('port', process.env.PORT||3000);  
+var env = require('node-env-file'); // .env file
+console.log("DIR ", __dirname)
+env(path.join(__dirname,"..","..", '.env'));
 
 // Set Port
-app.set('port', process.env.PORT||3000);
+const DIST_DIR = path.join(__dirname, "..", 'dist'); // NEW
+const HTML_FILE = path.join(DIST_DIR, 'index.html'); // NEW
+console.log("DIST: ", DIST_DIR)
+
+//console.log("Process: ", process.env.MODE)
+if (process.env.MODE === "PRODUCTION"){
+	console.log("Aquí ")
+	app.use(express.static(DIST_DIR));
+	app.get('/', (req, res) => {
+		res.sendFile(HTML_FILE); // EDIT
+	});
+	//app.use(express.static(HTML_FILE));
+}else{
+	app.use(middleware(webpack(webpackConfig)));
+}
+
 
 // Set Routes
 app.use(reservationRouter);
@@ -32,7 +43,7 @@ app.use(mockupRouter);
 app.use(videoRouter);
 
 // Middlewares
-app.use(webpackDevMiddleware(webpack(webpackConfig)));
+
 
 
 // Start server

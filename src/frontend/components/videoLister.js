@@ -8,12 +8,12 @@ import Modal from 'react-modal';
 import './styles/videoLister.css';
 import "video-react/dist/video-react.css"; // import css
 
-const api = "http://localhost:3000/list/videos/mcu";
-const api_video_stream = "http://localhost:3000/stream/video/mcu/";
+const api = "/list/videos/mcu";
+const api_video_stream = "/stream/video/mcu/";
 
-const api_download_stream = "http://localhost:3000/download-video/mcu/";
-const api_download_file = "http://localhost:3000/download-file/mcu";
-const api_delete = "http://localhost:3000/delete-video/mcu/";
+const api_download_stream = "/download-video/mcu/";
+const api_download_file = "/download-file/mcu";
+const api_delete = "/delete-video/mcu/";
 
 class videoLister extends React.Component {
     constructor(props){
