@@ -53,7 +53,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: '[name].css'
         }),
-        new DotEnv(),
         new CleanWebpackPlugin()
     ],
     optimization:{
