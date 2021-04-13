@@ -3,24 +3,52 @@ const express = require('express');
 const router = new express.Router();
 const fs = require('fs');
 const path = require('path');
-
+const {promisify} = require('util');
 var multer  = require('multer');
+
+const directoryExists = async(dir) =>{
+    return promisify(fs.access)(dir)
+    .then(()=>{return true})
+    .catch((e)=>{return false})
+
+}
+
+const createDirectory = async (dir) => {
+    return promisify(fs.mkdir)(dir, { recursive: true })
+}
+
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
+    destination: async function (req, file, cb) {
       const field = file.fieldname;
       const filename = file.originalname;
       const rootPath = path.join(__dirname, "..", "uploads");
       const mockupname = req.params.mockupname;
       const rootVideo = path.join(rootPath, mockupname, "videos");
       const rootFiles = path.join(rootPath, mockupname, "files");
-  
+      console.log("Intento de subida, ",filename, field);
+      let dir = "";
       if(field === "video"){
-            cb(null, rootVideo);
+        dir = rootVideo;
       }
       if(field === "file"){
-            cb(null, rootFiles);
+        dir = rootFiles;
       }
-      
+      let exist = false;
+      try{
+        exists = await directoryExists(dir);
+      }catch(e){
+        exists = false;
+      }
+
+      if(!exists){
+        try{
+            await createDirectory(dir)
+        }catch(e){
+
+        }
+      }
+      cb(null, dir);
+
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname);

@@ -37,6 +37,7 @@ if (env.MODE === "PRODUCTION"){
 	});
 	//app.use(express.static(HTML_FILE));
 }else{
+	console.log("Aquí 2")
 	app.use(middleware(webpack(webpackConfig)));
 }
 
