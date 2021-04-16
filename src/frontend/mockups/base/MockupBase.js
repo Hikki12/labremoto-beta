@@ -5,6 +5,7 @@ import MockupClientIO from '../mockup-client/MockupIO-client';
 import RadioButton from '../components/RadioButton';
 import ModalVideo from '../components/ModalVideo';
 import ModalQuiz from '../quiz/ModalQuiz';
+import { set } from 'mongoose';
 
 
 class MockupBase extends React.Component {
@@ -38,19 +39,61 @@ class MockupBase extends React.Component {
         this.openQuiz = this.openQuiz.bind(this);
         this.closeQuiz = this.closeQuiz.bind(this);
         this.sendUpdates = this.sendUpdates.bind(this); 
+
     }
 
     componentDidMount() {
         this.clientIO = new MockupClientIO(name="MAQUETA-MCU");
         this.clientIO.newFrameReady(this.displayVideoImage.bind(this));
         this.clientIO.reciveUpdates(this.reciveFromServer.bind(this));
+        //this.clientIO.updatesRequest(this.sendUpdates.bind(this));
+        if(this.props.mode < 1){
+            this.randomRadio();
+            this.randomSpeed();
+            this.randomDir();
+            this.autoStart(2000);
+        }else{
+            this.clientIO.updatesRequest(this.sendUpdates.bind(this));
+        }
     }
 
-    reciveFromServer(variables){
-        console.log("Reciving variables", variables);
-        console.log("Vars: ", this.vars);
-        this.vars.dirBtn.current.checked = !variables.DirState;
-        switch(variables.Radio){
+    autoStart = (time=1000) => {
+        this.vars.playBtn.current.checked = false;
+        setTimeout(()=>{
+            console.log("Auto Starting...");
+            this.sendUpdates();
+        }, time)
+    }
+
+    classHide = (name) => {
+        let mode = this.props.mode;
+        let hide = true;
+        if (mode >= 1){
+            hide = false;
+        }
+        if(hide){
+            return "hide"
+        }
+        
+        if(name == "radios"){
+            return "radios__container--button"
+        }
+        if(name == "play"){
+            return "play__container";
+        }
+        if(name == "recordTime"){
+            return "recordTime__container";
+        }
+        if(name == "clockwise"){
+            return "clockwise__container";
+        }
+        if(name == "slider"){
+            return "slider__container";
+        }
+    }
+
+    chooseRadio = (radio) => {
+        switch(radio){
             case 1:
                 this.vars.r1Btn.current.checked = true;
                 break;
@@ -61,9 +104,15 @@ class MockupBase extends React.Component {
                 this.vars.r3Btn.current.checked = true;
                 break;
         }
+    }
+
+    reciveFromServer(variables){
+        console.log("Reciving variables", variables);
+        this.vars.dirBtn.current.checked = !variables.DirState;
+        this.chooseRadio(variables.Radio);
         this.vars.sliderLabelValue.current.innerHTML  = (0.3*variables.Steps).toFixed(1);
         this.vars.slider.current.value = variables.Steps;
-        this.vars.playBtn.current.checked = variables.PlayState;
+        this.vars.playBtn.current.checked = !variables.PlayState;
         this.vars.recordBtn.current.checked = variables.Recording;
         this.vars.slider.current.value = variables.Steps;
         this.vars.recordTime.current.value = variables.RecordingTime;
@@ -71,7 +120,6 @@ class MockupBase extends React.Component {
     }
 
     sendUpdates(){
-        console.log("Something happen...");
         let radio = 0;
 
         if(this.vars.r1Btn.current.checked){
@@ -83,20 +131,35 @@ class MockupBase extends React.Component {
         if(this.vars.r3Btn.current.checked){
             radio = 3;
         }
-        console.log("VARS: ", this.vars)
 
         let variables = {
             ID: "MAQUETA-MCU",
             PlayState: !this.vars.playBtn.current.checked,
-            DirState: this.vars.dirBtn.current.checked,
+            DirState: !this.vars.dirBtn.current.checked,
             LightState: this.vars.lightBtn.current.checked,
             Radio: radio,
             Recording: this.vars.recordBtn.current.checked,
-            Steps: this.vars.slider.current.value,
+            Steps: parseInt(this.vars.slider.current.value),
             RecordingTime: parseInt(this.vars.recordTime.current.value, 10),
         }
         console.log("Variables to send: ", variables);
         this.clientIO.sendToServer(variables);
+    }
+
+    randomRadio = () => {
+        let radio = Math.floor(Math.random() * (3 - 1) ) + 1;
+        this.chooseRadio(radio);
+    }
+
+    randomSpeed = () => {
+        const max = 100;
+        const min = 30;
+        let speed = Math.floor(Math.random() * (max - min) + min);
+        this.vars.slider.current.value = speed;
+        this.updateSpeedLabel()
+    }
+    randomDir = () => {
+        this.vars.dirBtn.current.checked = Math.random() < 0.5;
     }
 
     componentWillUnmount(){
@@ -167,47 +230,49 @@ class MockupBase extends React.Component {
                      <div className="col-sm-6 controls__container">
                         <div className="controls__container--elements">
 
-                                <h5 className="card-title text-center"><strong> Controles de la maqueta</strong> </h5>
+                                {/* <h5 className="card-title text-center"><strong> Controles de la maqueta</strong> </h5> */}
                                 <p className="card-text text-center">
                                     <i>Seleccione la acción.</i>
                                 </p>
-                                <div className="clockwise__container">
+                                <div className={this.classHide('clockwise')}>
                                         <input id="clockwiseBtn" type="checkbox" onClick={this.sendUpdates} ref={this.vars.dirBtn}/>
                                         <label htmlFor="clockwiseBtn"></label>
                                         <div className="curve-arrow"></div>
                                     </div>
                                     <div className="radios__container">
-                                        <div className="radios__container--button">
+                                        <div className={this.classHide('radios')}>
                                             <input type="radio" id="r1Btn" name="selector" onClick={this.sendUpdates} ref={this.vars.r1Btn} defaultChecked/>
                                             <label htmlFor="r1Btn">R = 3cm</label>
                                             <div className="check"></div>
                                         </div>
-                                        <div className="radios__container--button">
+                                        <div className={this.classHide('radios')}>
                                             <input type="radio" id="r2Btn" name="selector" onClick={this.sendUpdates} ref={this.vars.r2Btn}/>
                                             <label htmlFor="r2Btn">R = 6cm</label>
                                             <div className="check"></div>
                                         </div>
-                                        <div className="radios__container--button">
+                                        <div className={this.classHide('radios')}>
                                             <input type="radio" id="r3Btn" name="selector" onClick={this.sendUpdates} ref={this.vars.r3Btn}/>
                                             <label htmlFor="r3Btn">R = 9cm</label>
                                             <div className="check"></div>
                                         </div>
                                     </div>
-                                <div className="slider__container">
+                                <div className={this.classHide('slider')}>
                                         <div className="slider__container--label-container">
                                             <span id="sliderLabelValue" ref={this.vars.sliderLabelValue}>0.0</span>
                                            
                                         </div>
-                                        <input id="speedSlider" className="rs-range" type="range" step="1" min="0" max="200"
+                                        <input id="speedSlider" className="rs-range" type="range" step="1" min="0" max="100"
                                         defaultValue="0" ref={this.vars.slider} onClick={this.sendUpdates} onChange={this.updateSpeedLabel}/>
                                         <div className="box-minmax">
-                                            <span>0</span><span>60</span>
+                                            <span>0</span><span>30</span>
                                         </div>
                                 </div>
 
                                 <div className="play__box">
-                                        <div className="play__container">
-                                            <input id="playBtn" type="checkbox" defaultValue="None" ref={this.vars.playBtn} onClick={this.sendUpdates}/>
+                                        <div className={this.classHide('play')}>
+                                            <input id="playBtn" type="checkbox" defaultValue="None" ref={this.vars.playBtn} onClick={this.sendUpdates}
+                                                defaultChecked
+                                            />
                                             <label htmlFor="playBtn" tabIndex="1"></label>
                                             <div className="labelBtn" id="playLabel">INICIAR</div>
                                         </div>
@@ -217,10 +282,10 @@ class MockupBase extends React.Component {
                                             <div className="labelBtn" id="recordLabel">GRABAR</div>
                                         </div>
                                     </div>
-                                    <div id="msg">PRESIONE INICIAR</div>
-                                    <div className="recordTime__container">
+                                    {/* <div id="msg">PRESIONE INICIAR</div> */}
+                                    <div className={this.classHide('recordTime')}>
                                         <span>Record Time (seg): </span>
-                                        <input type="number" defaultValue="20" id="timeInput" name="tentacles" min="10"
+                                        <input type="number" defaultValue="50" id="timeInput" name="tentacles" min="10"
                                             max="100" ref={this.vars.recordTime} onInput={this.sendUpdates}/>
                                     </div>
                         </div>

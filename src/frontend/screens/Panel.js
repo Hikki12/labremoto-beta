@@ -35,7 +35,7 @@ class PanelPage extends React.Component {
                 <section className="panel__section">
                     <div className="container">
                         <div className="title__container"> 
-                            <h1 className="title text-center">PRÁCTICAS</h1>
+                            <h1 className="title text-center">EXPERIMENTOS</h1>
                             <h2 className="subtitle text-center">Maquetas disponibles</h2>
                             <hr className="col-sm-10"/>
                         </div>

@@ -6,8 +6,6 @@
   "scripts": {
     "server": "node ./src/backend/server.js",
     "start": "npm run server",
-    "dev": "webpack serve --config webpack.config.dev.js && npm run server",
-    "fakeapi": "json-server --watch initialState.json --port 8000",
     "build": "webpack --config webpack.config.js"
   },
   "keywords": [],

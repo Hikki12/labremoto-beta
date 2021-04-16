@@ -12,7 +12,7 @@ const api = "/list/videos/mcu";
 const api_video_stream = "/stream/video/mcu/";
 
 const api_download_stream = "/download-video/mcu/";
-const api_download_file = "/download-file/mcu";
+const api_download_file = "/download-file/mcu/";
 const api_delete = "/delete-video/mcu/";
 
 class videoLister extends React.Component {
@@ -67,7 +67,8 @@ class videoLister extends React.Component {
     }
 
     downloadFile = (videoname) => {
-        let url = api_download_file + videoname;
+        let filename = videoname.substring(0, videoname.length - 4) + ".xlsx";
+        let url = api_download_file + filename;
         console.log("Downloading", url);
         axios({
             url: url,
@@ -75,7 +76,7 @@ class videoLister extends React.Component {
             responseType: 'blob'
             })
             .then((res) => {
-                download(res.data, videoname);
+                download(res.data, filename);
                 console.log("Res: ", res);
             })
             .catch((error) => {

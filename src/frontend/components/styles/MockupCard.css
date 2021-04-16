@@ -30,6 +30,13 @@ h1, h2, h3, p {
     padding-top:5px;
     font-size: 1.35rem;
 }
+.selector__card {
+    box-shadow: 0px 0px 25px 1px rgba(44, 100, 175, 0.596);
+}
+
+.selector__card:focus {
+    box-shadow: 0px 0px 25px 1px rgba(44, 100, 175, 0.596);
+}
 
 .card__body--status {
     height: 120px;

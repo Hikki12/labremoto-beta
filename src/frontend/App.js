@@ -7,7 +7,7 @@ import NotFound from './screens/NotFound';
 import Bookings from './screens/Bookings';
 import MockupForm from './screens/MockupForm';
 import MockupMCU from './mockups/mcu/MockupMCU';
-
+// import SubPractices from './screens/SubPractices';
 
 
 function App(){
@@ -19,7 +19,9 @@ function App(){
                     <Route path="/home" component={PanelPage} exact/>
                     <Route path="/reservas" component={Bookings} exact/>
                     <Route path="/addMockup" component={MockupForm} exact/>
-                    <Route path="/mcu" component={MockupMCU} exact/>
+                    <Route path="/mcu/:mode" component={MockupMCU}></Route>
+                    {/* <Route path="/:mockupname/subpractices" component={SubPractices} exact/>
+                    <Route path="/:mockupname/subpractices/:index" component={MockupMCU}></Route> */}
                     <Route component={NotFound} />
                 </Switch>
             </Layout>

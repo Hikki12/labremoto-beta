@@ -39,7 +39,7 @@ class ScrollList extends React.Component {
               data={this.props.videos[index]}
               onDemand={this.props.onDemand}
               downloadVideo={this.props.downloadVideo}
-              dowloadFile={this.props.dowloadFile}
+              downloadFile={this.props.downloadFile}
               openDialog={this.props.openDialog}
               />
           </div>

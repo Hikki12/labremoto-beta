@@ -159,8 +159,9 @@ router.get('/download-video/:mockupname/:filename', (req, res) => {
 **/
 router.get('/download-file/:mockupname/:filename', (req, res) => {
     const rootPath = path.join(__dirname, "..", "uploads");
-    const videoname = req.params.filename;
-    const filename = videoname.substring(0, videoname.length - 4) + ".xlsx";
+    //const videoname = req.params.filename;
+    const filename = req.params.filename;
+    //const filename = videoname.substring(0, videoname.length - 4) + ".xlsx";
     const mockupname = req.params.mockupname;
     const filePath = path.join(rootPath, mockupname, "files", filename);
     console.log("Downloading: ",filename );

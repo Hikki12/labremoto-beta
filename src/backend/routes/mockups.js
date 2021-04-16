@@ -1,6 +1,10 @@
 const express = require('express');
 const router = new express.Router();
 
+/*
+
+
+*/
 
 const mockups = {
     "mockups":[
@@ -9,7 +13,12 @@ const mockups = {
             "name":"Movimiento Circular Uniforme",
             "description": "Something...",
             "url": "/mcu",
-            "state": "active"
+            "state": "active",
+            "descriptions":[
+                "Something 1...",
+                "Something 2...",
+                "Something 3..."
+            ],
         },
         {
             "id": 2,

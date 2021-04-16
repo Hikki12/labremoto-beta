@@ -2,6 +2,10 @@
     padding-top: 60px;
 }
 
+.hide {
+    display: none;
+}
+
 .mockup__title {
     color: #7e7d7d;
     text-align: center;
@@ -443,6 +447,8 @@
         align-items: center;
         justify-content: center;
         height: 100%;
+        margin-left: 2rem;
+        margin-right: 2rem;
     }
     
     .play__container label {
@@ -460,6 +466,7 @@
         color: #555555;
         font-weight: bold;
         font-size: 18px;
+        margin-left: -2rem;
     }
     
     .play__container input[type="checkbox"] {
@@ -507,6 +514,7 @@
         border: 4px solid black;
         border-radius: 35px;
         background: blanchedalmond;
+        
         
     }
     

@@ -7,7 +7,11 @@ class MockupMCU extends React.Component {
 	render() {
 		return(
 	        <>
-	            <MockupBase name="MAQUETA-MCU" controls={MCUControls}/>
+	            <MockupBase 
+					name="MAQUETA-MCU" 
+					controls={MCUControls}
+					mode={this.props.match.params.mode}
+				/>
 	        </>
     	)
 	}

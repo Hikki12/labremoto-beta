@@ -1,0 +1,19 @@
+.container__card{
+    height: 300px imp !important;
+    width: 32rem;
+    
+}
+
+.practice__title{
+    font-size: 1.25rem;
+    color: white;
+    margin-left: 1rem;
+    position: relative;
+    top:20%;
+}
+
+.container__card--title {
+    height: 40px;
+    background: #82898c;
+
+}

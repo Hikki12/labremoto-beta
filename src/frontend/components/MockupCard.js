@@ -1,6 +1,6 @@
 import React from 'react';
 import MockupFormEditor from './MockupFormEditor';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/MockupCard.css';
 
@@ -8,8 +8,14 @@ import './styles/MockupCard.css';
 class MockupCard extends React.Component {
     constructor(props){
         super(props);
+        let description = "something...";
+        if(props.descriptions){
+            description = props.descriptions[0];
+        }
         this.state = {
             modalIsOpen: false,
+            index:0,
+            description: description
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -19,6 +25,8 @@ class MockupCard extends React.Component {
     componentDidMount(){
         
     }
+
+    
 
     openModal(){
         this.setState({modalIsOpen: true});
@@ -33,6 +41,17 @@ class MockupCard extends React.Component {
         this.openModal();
     }
 
+    selectorChange = (e) => {
+        //console.log("Props,", this.props.descriptions);
+        let index = e.target.selectedIndex;
+        if(this.props.descriptions){
+            this.setState({
+                index: index,
+                description: this.props.descriptions[index]
+            });
+        }
+
+    }
     render(){
         return(
             <div className="card__container">
@@ -43,11 +62,24 @@ class MockupCard extends React.Component {
                 />
 
                 <div className="card__title">
-
-                    <h1 className="title__name">{this.props.name}</h1>
+                    <div className="col-10">
+                        <h1 className="title__name">{this.props.name}</h1>
+                    </div>
+                    
+                    <div className="col-2">
+                    {this.props.descriptions &&
+                    
+                        <select onChange={this.selectorChange} className="form-control form-control-md selector__card">    
+                            <option defaultValue="1" >Práctica 1</option>
+                            <option defaultValue="2">Práctica 2</option>
+                            <option defaultValue="3">Práctica 3</option>
+                        </select>
+                        }
+                    </div>
+               
                 </div>
                 <div className="card__body">
-                    <div className="card__body--status">
+                    {/* <div className="card__body--status">
                         <h2 className="title__status">Estado:</h2>
                         <div className="status__indicators">
                             <div className="indicator__container">
@@ -64,18 +96,18 @@ class MockupCard extends React.Component {
                             </div>
                         </div>
 
-                    </div>
+                    </div> */}
                     <div className="card__body--description">
                         <div className="description__title--container">
                             <h2 className="description__title">Descripción:</h2>
                         </div>
                         <div className="description__body--container">
-                            <p className="description">{this.props.description}</p>
+                            <p className="description">{this.state.description}</p>
                         </div>
                     </div>
                     <div className="card__body--controls row">
                         <div className="col-lg-1">
-                            <NavLink  to={this.props.url} className="btn btn-outline-info">Entrar</NavLink>
+                            <Link  to={this.props.url + "/" + this.state.index.toString()} className="btn btn-outline-info">Entrar</Link>
                             {/* <button className="btn btn-outline-info" type="button">Entrar</button> */}
                         </div>
                         <div className="col-lg-1">
@@ -88,7 +120,7 @@ class MockupCard extends React.Component {
                             <button className="btn btn-warning" onClick={this.editModal} type="button">Editar</button>
                         </div>
                         <div className="col-lg-1">
-                            <button className="btn btn-danger" type="button">Editar</button>
+                            <button className="btn btn-danger" type="button">Eliminar</button>
                         </div>
                     </div>
                 </div>
