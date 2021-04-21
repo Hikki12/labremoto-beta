@@ -1,0 +1,41 @@
+.info__container {
+    height: 5rem;
+    /* border: 2px solid #2f57ac; */
+}
+
+.question__container {
+    margin-top: 2rem;
+    height: 22rem;
+}
+
+.statement__container {
+    height: 3rem;
+}
+
+.question__statement{
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 1.2rem;
+    color: #585a61;
+    margin-left: -1rem;
+    text-align: justify;
+}
+
+.answers__container {
+    height: 15rem;
+}
+
+.answers__container--aligner {
+    margin-top: 2rem;
+}
+
+.answer__container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+
+.quiz__buttons--container {
+    height: 3rem;
+}

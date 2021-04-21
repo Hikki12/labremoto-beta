@@ -28,6 +28,21 @@ const request_updates_server_web = "request server web";
 const request_updates_web_server = "request web mockup";
 const request_updates_server_mockup = "request server mockup";
 
+/*Request for quiz*/
+const quiz_mockup_server = "quiz mockup server";
+const quiz_server_web = "quiz server web";
+
+
+/*Stop routes*/
+const stop_web_server = "stop web server";
+const stop_server_mockup = "stop server mockup";
+const stop_mockup_server = "stop mockup server";
+const stop_server_web = "stop server web";
+
+/*Routes for error*/
+const error_mockup_server = "error mockup server"; 
+
+
 class MockupClientIO {
 
     constructor(name){
@@ -37,6 +52,8 @@ class MockupClientIO {
         this.displayVideoImage = null;
         this.reciveFromServer = null;
         this.updatesRequestCallback = null;
+        this.reciveQuizCallback = null;
+        this.stopCallback = null;
     }
 
 
@@ -76,6 +93,18 @@ class MockupClientIO {
             }
         });
 
+        this.io.on(quiz_server_web, (quiz)=>{
+            if(this.reciveQuizCallback){
+                this.reciveQuizCallback(quiz);
+            }
+        });
+
+        this.io.on(stop_server_web, () => {
+            if(this.stopCallback){
+                this.stopCallback();
+            }
+        });
+
     }
 
     newFrameReady = (cb) => {
@@ -94,6 +123,17 @@ class MockupClientIO {
         this.io.emit(response_updates_web_server, variables);
     }
 
+    reciveQuiz = (cb) => {
+        this.reciveUpdatesCallback = cb;
+    }
+
+    wasStop = (cb) => {
+        this.stopCallback = cb;
+    }
+
+    stop = () => {
+        this.io.emit(stop_web_server);
+    }
 
     close = () => {
         this.io.disconnect();

@@ -6,6 +6,23 @@
     display: none;
 }
 
+table td {
+  position: relative;
+}
+
+table td input {
+  position: absolute;
+  display: block;
+  top:0;
+  left:0;
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  border: none;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
 .mockup__title {
     color: #7e7d7d;
     text-align: center;
@@ -26,6 +43,12 @@
     padding-top: 4rem;
 }
 
+.video {
+    margin-left:auto;
+    margin-right: auto;
+    display: block;
+}
+
 .controls__container{ 
     border: 2px solid rgba(0,0,0, 0.05);
     padding-top: 4rem;
@@ -38,6 +61,7 @@
 
 .card-body {
     z-index: 0 !important;
+    padding: 4rem;
 }
 
 .video {
@@ -61,13 +85,6 @@
     display: flex;
         
 }
-
-.light__container {
-    width: 200px;
-    height: 200px;
-    display: flex;
-}
-
 
 /*BOTONES SELECTORES DE RADIO*/
 .radios__container {
@@ -294,7 +311,7 @@
     
     .light__container {
         width: 200px;
-        height: 200px;
+        height: 70px;
         display: flex;
     }
     .light__container label {

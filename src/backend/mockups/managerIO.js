@@ -1,5 +1,10 @@
 const SocketIO = require('socket.io');
 
+
+/* VARIABLES NAME FORMAT
+action_from_to
+*/
+
 /*Connection Routes*/
 const identify_mockup = "identify mockup";
 const identify_web = "identify web";
@@ -27,6 +32,20 @@ const request_updates_server_web = "request server web";
 const request_updates_web_server = "request web mockup";
 const request_updates_server_mockup = "request server mockup";
 
+
+/*Request for quiz*/
+const quiz_mockup_server = "quiz mockup server";
+const quiz_server_web = "quiz server web";
+
+
+/*Stop routes*/
+const stop_web_server = "stop web server";
+const stop_server_mockup = "stop server mockup";
+const stop_mockup_server = "stop mockup server";
+const stop_server_web = "stop server web";
+
+/*Routes for error*/
+const error_mockup_server = "error mockup server"; 
 
 
 module.exports = (server) => {
@@ -115,12 +134,33 @@ module.exports = (server) => {
 			socket.to(socket.roomID).emit(request_updates_server_mockup);
 		});
 
+		/*Routes for quizes*/
+		socket.on(quiz_mockup_server, (quiz) =>{
+			socket.to(socket.roomID).emit(quiz_server_web);
+		});
+
+		/*Routes for stop process*/
+		socket.on(stop_web_server, () => {
+			socket.to(socket.roomID).emit(stop_server_mockup);
+		});
+
+		socket.on(stop_mockup_server, () => {
+			socket.to(socket.roomID).emit(stop_server_web);
+		});
+
+		/*Routes for erros*/
+		socket.on(error_mockup_server, (error) => {
+			console.log("Mockup notifies an error!");
+			console.log(error);
+		})
+
 		// When a user disconnects
 	    socket.on("disconnect", () => {
 	    	n_users--;
 			// if there are not users, stop streaming	    	
 	    	if(n_users < 1){ 
 	    		socket.to(socket.roomID).emit(stream_control_web_server_mockup, false);
+	    		socket.to(socket.roomID).emit(stop_server_mockup);
 	    		n_users = 0;
 	    	}
 		});

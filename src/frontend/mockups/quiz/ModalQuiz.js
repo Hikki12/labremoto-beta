@@ -1,174 +1,31 @@
 import React from 'react';
 import Modal from 'react-modal';
+import './ModalQuiz.css';
 
 
-const quiz_test = {
-    "1":{
-       "type":"text",
-       "id":"1",
-       "statement":"El o los ____ son de ayuda para el proyecto",
-       "answers":{
-          "1":{
-             "value":"datos"
-          },
-          "2":{
-             "value":"dato"
-          },
-          "3":{
-             "value":"Datos"
-          }
-       }
-    },
-    "2":{
-       "type":"radio",
-       "id":"1",
-       "statement":"Alg\u00fan enunciado 2",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":false
-          },
-          "2":{
-             "value":3,
-             "correct":true
-          },
-          "3":{
-             "value":5,
-             "correct":false
-          },
-          "4":{
-             "value":7,
-             "correct":false
-          }
-       }
-    },
-    "3":{
-       "type":"check",
-       "id":"1",
-       "statement":"Alg\u00fan enunciado 3",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":false
-          },
-          "2":{
-             "value":3,
-             "correct":true
-          },
-          "3":{
-             "value":5,
-             "correct":false
-          },
-          "4":{
-             "value":7,
-             "correct":true
-          }
-       }
-    },
-    "4":{
-       "type":"radio",
-       "id":"1",
-       "statement":"Alg\u00fan enunciado 555",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":false
-          },
-          "2":{
-             "value":3,
-             "correct":true
-          },
-          "3":{
-             "value":5,
-             "correct":false
-          },
-          "4":{
-             "value":7,
-             "correct":false
-          }
-       }
-    },
-    "5":{
-       "type":"radio",
-       "id":"1",
-       "statement":"Una pregunta más",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":true
-          },
-          "2":{
-             "value":3,
-             "correct": false
-          },
-          "3":{
-             "value":5,
-             "correct":false
-          },
-          "4":{
-             "value":7,
-             "correct":false
-          }
-       }
-    },
-    "6":{
-       "type":"check",
-       "id":"1",
-       "statement":"Una pregunta más 6",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":true
-          },
-          "2":{
-             "value":3,
-             "correct": true
-          },
-          "3":{
-             "value":5,
-             "correct":true
-          },
-          "4":{
-             "value":7,
-             "correct":false
-          }
-       }
-    },
-    "7":{
-       "type":"radio",
-       "id":"1",
-       "statement":"Una pregunta más 7 ",
-       "answers":{
-          "1":{
-             "value":2,
-             "correct":true
-          },
-          "2":{
-             "value":3,
-             "correct": false
-          },
-          "3":{
-             "value":5,
-             "correct":false
-          },
-          "4":{
-             "value":7,
-             "correct":false
-          }
-       }
-    },
-    "8":{
-       "type":"text",
-       "id":"1",
-       "statement":"Una pregunta _____ más 8 ",
-       "answers":{
-          "1":{
-             "value":"diego",
-             "correct":true
-          }
-       }
-    }
- }
+const quiz2 = [
+   {
+      "type": "radio",
+      "statement": "El movimiento que usted ha observado, se aproxima más a:",
+      "answers": [
+         {"value": "Movimiento Circular Uniforme", "isCorrect": true},
+         {"value": "Movimiento Circular Uniformemente Acelerado", "isCorrect": false},
+         {"value": "Movimiento Giratorio", "isCorrect": false}
+      ],
+   },
+   {
+      "type": "input-numerical",
+      "statement": "Algo",
+      "answers": [
+         {"value": "1", "isCorrect": true},
+         {"value": "2", "isCorrect": true},
+         {"value": "3", "isCorrect": false}
+      ],    
+   } 
+
+];
+
+
 
 
 const customStyles = {
@@ -181,58 +38,17 @@ const customStyles = {
 class ModalQuiz extends React.Component {
     constructor(props){
         super(props);
-        
-    }
-
-    renderAnswer(type, answers){
-        let arrAnswers = this.jsonToArray(answers);
-        console.log("Arr Answers:", arrAnswers);
-
-        if(type==="text"){
-            return(
-                <div>
-                    <input type="text" className="form-control" placeholder="su respuesta es..."/>
-                </div>
-                
-            );
-        }else if(type==="check"){
-            return(
-                arrAnswers.map((ans) =>{
-                    return(
-                        <div>
-                            <input className="form-check-input" type="checkbox"/>
-                            <label htmlFor="form-check-label">{ans.value}</label>
-                        </div>
-                    );
-                })
-            );
-        } else if(type==="radio"){
-            return(
-                arrAnswers.map((ans) => {
-                    return(
-                        <div>
-                            <input className="form-check-input" type="checkbox"/>
-                            <label htmlFor="form-check-label">{ans.value}</label>
-                        </div>
-                    );
-                })
-            );
+        this.state = {
+           quizIndex: 0,
+           points: 0,
+           total: quiz2.length
         }
 
-    }
+        this.note = {
+           points: 0,
+           total: quiz2.length
+         }
 
-    renderQuestion(question, key){
-        console.log("Question: ", question)
-        let statement = question.statement;
-        let type = question.type;
-        let answers = question.answers;
-        return(
-            <div className="statement__quiz title" key={key}>
-                {statement}
-                {this.renderAnswer(type, answers)}
-            </div>
-            
-        ); 
     }
 
     jsonToArray(json){
@@ -258,6 +74,85 @@ class ModalQuiz extends React.Component {
             </div>
         );
 
+    } 
+
+    readAnswer = (value) => {
+      if(value){
+         this.note.points++;
+         if(this.note.points > this.note.total){
+            this.note.points = this.note.total;
+         }
+      }
+      else {
+         this.note.points--;
+         if(this.note.points < 0){
+            this.note.points = 0;
+         }
+      }
+      this.setState({
+         points: this.note.points,
+         total: this.note.total
+      })
+
+      console.log("Tu calificación es: ",`${this.note.points} / ${this.note.total}`);
+    }
+
+    renderQuestion(question){
+      return(
+         <div className="question__container">
+            <div className="statement__container">
+               {/* <h1 className="title h-100 align-middle">{question.statement}</h1> */}
+               <div className="col-sm-12 question__statement title">
+                  {question.statement}
+               </div>
+            </div>
+            <div className="answers__container">
+               <div className="answers__container--aligner">
+               
+                  {question.answers.map((answer, index) => {
+                        return(
+                           <div className="answer__container" key={index}>
+                              <button className="btn btn-outline-primary btn-lg btn-block text-left"
+                              onClick={() => this.readAnswer(answer.isCorrect)}
+                              >
+                                 {answer.value}
+                              </button>
+                           </div>
+                           
+                        );
+                  })}
+               </div>
+            </div>
+       </div>      
+      ); 
+    }
+
+    nextQuestion = () => {
+       let n_questions = quiz2.length - 1;
+       let index = this.state.quizIndex;
+       if(index < n_questions){
+          this.setState({
+             quizIndex: index + 1
+          });
+       }
+    }
+
+    previousQuestion = () => {
+       let index = this.state.quizIndex - 1;
+       if(index <= 0){
+          index = 0
+       }
+       this.setState({
+         quizIndex: index
+       });
+    }
+
+    renderNote = () => {
+       return(
+         <div>
+            {`${this.state.points} / ${this.state.total}`}
+         </div>
+       );
     }
      
     render(){
@@ -273,14 +168,26 @@ class ModalQuiz extends React.Component {
                     <div className="container scrollable">
                         <div className="container__title">
                             <h1 className="title text-center">CUESTIONARIO</h1>
-                            <div className="timer__count col-lg-2">
-                                30:00
+                            <div className="info__container row">
+                                {this.renderNote()}
                             </div>
                         </div>
-                        <div className="container__quiz">
-                            {this.renderQuiz()}
+                           <hr className="col-10"/>
+                        {this.renderQuestion(quiz2[this.state.quizIndex])}
+
+                        <div className="quiz__buttons--section">
+                           <div className="quiz__buttons--container offset-9">
+                              <div className="quiz__buttons row">
+                                    <div className="quiz__button--container">
+                                       <button onClick={this.previousQuestion} className="btn btn-secondary btn-lg">Anterior</button>
+                                    </div>
+                                    <div className="quiz__button--container ml-2">
+                                       <button onClick={this.nextQuestion} className="btn btn-primary btn-lg">Siguiente</button>
+                                    </div>
+                              </div>
+                           </div>
+
                         </div>
-                        
                     </div>
                 </Modal>
             </div>
