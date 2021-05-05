@@ -1,5 +1,5 @@
 .section {
-    padding-top: 60px;
+    padding-top: 20px;
 }
 
 .hide {
@@ -41,6 +41,26 @@ table td input {
     border: 2px solid rgba(0,0,0, 0.05);
     margin-right: -2rem;
     padding-top: 4rem;
+}
+
+.socket__info--container {
+    display: flex;
+    position: relative;
+    top: -50%;
+    left: 174%;
+}
+.socket__info--element {
+    font-weight: bold;
+}
+.socket__info--indicator__on {
+    margin-left: 2px;
+    font-weight: bold;
+    color: green;
+}
+.socket__info--indicator__off {
+    margin-left: 2px;
+    font-weight: bold;
+    color: orange;
 }
 
 .video {
@@ -312,7 +332,12 @@ table td input {
     .light__container {
         width: 200px;
         height: 70px;
-        display: flex;
+    }
+    .light__text {
+        position: relative;
+        top: -17px;
+        left:6%;
+        font-weight: bold;
     }
     .light__container label {
         margin-top: 10px;
@@ -451,7 +476,7 @@ table td input {
     
     .play__box {
         /* border: 5px solid violet; */
-        display: flex;
+        /*display: flex;*/
         width: 100%;
         height: 100px;
     }

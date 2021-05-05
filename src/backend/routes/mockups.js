@@ -10,16 +10,29 @@ const mockups = {
     "mockups":[
         {
             "id": 1,
-            "name":"Movimiento Circular Uniforme",
+            "name":"Movimiento Circular",
             "description": "Something...",
             "url": "/mcu",
             "state": "active",
+
+            "topics": [
+                "Período y Frecuencia",
+                "...",
+                "..."
+            ],
+            "materials":[
+                "Cronómetro y calculadora",
+                "...",
+                "..."
+            ],
+
             "descriptions":[
-                "Something 1...",
+                "Determinar experimentalmente la relación que existe entre el número de rotaciones y el tiempo transcurrido en relación con los parámetros de período y frecuencia de un movimiento circular.",
                 "Something 2...",
                 "Something 3..."
             ],
         },
+        
         {
             "id": 2,
             "name": "Caída Libre",

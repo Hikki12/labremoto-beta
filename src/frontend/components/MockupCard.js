@@ -9,13 +9,19 @@ class MockupCard extends React.Component {
     constructor(props){
         super(props);
         let description = "something...";
+        let topic = "...";
+        let materials = "...";
         if(props.descriptions){
             description = props.descriptions[0];
+            topic = props.data.topics[0]
+            materials = props.data.materials[0]
         }
         this.state = {
             modalIsOpen: false,
             index:0,
-            description: description
+            description: description,
+            topic: topic,
+            materials: materials
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -47,7 +53,9 @@ class MockupCard extends React.Component {
         if(this.props.descriptions){
             this.setState({
                 index: index,
-                description: this.props.descriptions[index]
+                description: this.props.descriptions[index],
+                topic: this.props.data.topics[index],
+                materials: this.props.data.materials[index]
             });
         }
 
@@ -97,10 +105,27 @@ class MockupCard extends React.Component {
                         </div>
 
                     </div> */}
-                    <div className="card__body--description">
+                    <div className="card__body--topic">
                         <div className="description__title--container">
-                            <h2 className="description__title">Descripción:</h2>
+                            <h2 className="description__title">TEMA:</h2>                         
                         </div>
+                        <div className="description__body--container">
+                            <p className="description">  {this.state.topic}</p>
+                        </div>   
+                    </div>
+                    <hr/>
+                    <div className="card__body--topic">
+                        <h2 className="description__title">MATERIALES:</h2>
+                        <div className="description__body--container">
+                            <p className="description">{this.state.materials}</p>
+                        </div>    
+                    </div>
+                    <hr/>
+                    <div className="description__title--container">
+                        <h2 className="description__title">Descripción:</h2>
+                    </div>
+
+                    <div className="card__body--description">
                         <div className="description__body--container">
                             <p className="description">{this.state.description}</p>
                         </div>

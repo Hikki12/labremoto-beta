@@ -50,6 +50,7 @@ const error_mockup_server = "error mockup server";
 
 module.exports = (server) => {
 	let n_users = 0;
+	let masterid = "";
 
     const io = SocketIO(server, {
     	 cors: {
@@ -60,7 +61,7 @@ module.exports = (server) => {
     io.on('connection', (socket) => {
 
     	/*Connection routines*/
-
+		
     	// Mockup connection
     	socket.on(identify_mockup, (mockupName) => {
 			console.log("mockup join: ", mockupName, socket.id);
@@ -80,16 +81,30 @@ module.exports = (server) => {
         // Web client connection
 		socket.on(identify_web,(mockupName)=>{
 			n_users++;
+
+			if(n_users == 1){
+				socket.master = true;
+				masterid = socket.id;
+			}
+			else {
+				socket.master = false;
+			}
 			let username = mockupName + "_" + n_users.toString();
 
-			console.log("web client join: ", username, socket.id);
+			console.log("web client join: ", username, socket.id, "Is master?: ", socket.master);
 
 			let room = mockupName + "-ROOM";
 			socket.username = username;
 			socket.roomID = room;
 			socket.join(room);
-			io.to(socket.id).emit(identify_ok_web);
 
+			let identify_vars = {
+				"viewers": n_users,
+				"isMaster": socket.master
+			}
+
+			io.to(socket.id).emit(identify_ok_web, identify_vars);
+			io.to(socket.roomID).emit('n_users', n_users);
 	    	if(n_users > 0){
 	    		io.to(socket.roomID).emit(stream_control_web_server_mockup, true);
 	    	}    
@@ -110,7 +125,11 @@ module.exports = (server) => {
 
 		socket.on(response_updates_web_server, (data) => {
 			console.log("web client says :", data);
-			socket.to(socket.roomID).emit(response_updates_server_mockup, data);
+			if (socket.master){
+				socket.to(socket.roomID).emit(response_updates_server_mockup, data);
+				socket.to(socket.roomID).emit(response_updates_server_web, data);
+			}
+			
 		});
 
 		socket.on(response_ok_mockup_server, () => {
@@ -157,6 +176,8 @@ module.exports = (server) => {
 		// When a user disconnects
 	    socket.on("disconnect", () => {
 	    	n_users--;
+			//
+			io.to(socket.roomID).emit('n_users', n_users);
 			// if there are not users, stop streaming	    	
 	    	if(n_users < 1){ 
 	    		socket.to(socket.roomID).emit(stream_control_web_server_mockup, false);

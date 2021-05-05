@@ -4,24 +4,75 @@ import './ModalQuiz.css';
 
 
 const quiz2 = [
+
    {
       "type": "radio",
-      "statement": "El movimiento que usted ha observado, se aproxima más a:",
+      "statement": "El periodo de una partícula se define como: ",
       "answers": [
-         {"value": "Movimiento Circular Uniforme", "isCorrect": true},
-         {"value": "Movimiento Circular Uniformemente Acelerado", "isCorrect": false},
-         {"value": "Movimiento Giratorio", "isCorrect": false}
+         {"value": "El tiempo en el que realiza un ciclo completo", "isCorrect": true},
+         {"value": "El número de ciclos por unidad de tiempo", "isCorrect": false},
+         {"value": "El tiempo en el que se realizan varias vuelta", "isCorrect": false}
       ],
    },
+
    {
-      "type": "input-numerical",
-      "statement": "Algo",
+      "type": "radio",
+      "statement": "La frecuencia de una partícula se define como:",
       "answers": [
-         {"value": "1", "isCorrect": true},
-         {"value": "2", "isCorrect": true},
-         {"value": "3", "isCorrect": false}
+         {"value": "El número de ciclos que realiza por unidad de tiempo", "isCorrect": true},
+         {"value": "El tiempo en el que realiza un ciclo completo", "isCorrect": false},
+         {"value": "Las vueltas que realiza hasta que se detiene", "isCorrect": false},
+         {"value": "El ángulo girado en un ciclo", "isCorrect": false},
+
+      ],
+   },   
+
+   {
+      "type": "radio",
+      "statement": "Analice los resultados del experimento (en la tabla) y determine el periodo del movimiento.",
+      "answers": [
+         {"value": "El número de ciclos que realiza por unidad de tiempo", "isCorrect": true}
+      ],
+   },
+
+   {
+      "type": "radio",
+      "statement": "Analice los resultados del experimento (en la tabla) y determine la frecuencia del movimiento.",
+      "answers": [
+         {"value": "El número de ciclos que realiza por unidad de tiempo", "isCorrect": true}
+      ],
+   },  
+
+   {
+      "type": "radio",
+      "statement": "La partícula describe un:",
+      "answers": [
+         {"value": "MCU", "isCorrect": true},
+         {"value": "MCUV", "isCorrect": false},
+         {"value": "MRU", "isCorrect": false},
+         {"value": "MRUV", "isCorrect": false}
       ],    
-   } 
+   },
+
+   {
+      "type": "radio",
+      "statement": "El tiempo transcurrido, el número de rotaciones y el periodo en un movimiento circular uniforme se relacionan mediante la expresión:",
+      "answers": [
+         {"value": "MCU", "isCorrect": true},
+         {"value": "MCUV", "isCorrect": false},
+         {"value": "MRU", "isCorrect": false},
+         {"value": "MRUV", "isCorrect": false}
+      ],    
+   },
+
+   {
+      "type": "radio",
+      "statement": "El periodo de rotación de la partícula depende del radio. ",
+      "answers": [
+         {"value": "Verdadero", "isCorrect": true},
+         {"value": "Falso", "isCorrect": false},
+      ],    
+   }    
 
 ];
 
@@ -89,6 +140,7 @@ class ModalQuiz extends React.Component {
             this.note.points = 0;
          }
       }
+
       this.setState({
          points: this.note.points,
          total: this.note.total
@@ -149,10 +201,18 @@ class ModalQuiz extends React.Component {
 
     renderNote = () => {
        return(
-         <div>
-            {`${this.state.points} / ${this.state.total}`}
+         <div className="note__container">
+            {`Puntaje: ${this.state.points} / ${this.state.total}`}
          </div>
        );
+    }
+
+    renderQuestionIndex = () => {
+      return(
+          <div>
+             {`${this.state.quizIndex}`}
+          </div>
+      );
     }
      
     render(){
@@ -193,6 +253,7 @@ class ModalQuiz extends React.Component {
             </div>
         )
     }
-}
+    }
+
 
 export default ModalQuiz;

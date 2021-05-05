@@ -47,13 +47,18 @@ class MockupClientIO {
 
     constructor(name){
         this.name = name;
-        this.io = SocketIO();
-        this.configureSocketIO();
         this.displayVideoImage = null;
         this.reciveFromServer = null;
         this.updatesRequestCallback = null;
         this.reciveQuizCallback = null;
         this.stopCallback = null;
+        this.identifyCallback = null;
+        this.io = SocketIO();
+        this.configureSocketIO();
+        // setTimeout(() => {
+
+        // }, 1000);
+
     }
 
 
@@ -65,8 +70,11 @@ class MockupClientIO {
             console.log("Identificando...");
         });
 
-        this.io.on(identify_ok_web, () => {
-            console.log("I'm identify");
+        this.io.on(identify_ok_web, (vars) => {
+            console.log("I'm identify: ", vars);
+            if(this.identifyCallback){
+                this.identifyCallback(vars)
+            }
             //this.io.emit(request_updates_web_server);
         });
 
@@ -129,6 +137,10 @@ class MockupClientIO {
 
     wasStop = (cb) => {
         this.stopCallback = cb;
+    }
+
+    socketInfo = (cb) => {
+        this.identifyCallback = cb;
     }
 
     stop = () => {

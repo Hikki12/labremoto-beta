@@ -19,6 +19,8 @@ class MockupBase extends React.Component {
         this.state = {
             playerOn: false,
             quizIsOpen: false,
+            isMaster:false,
+            viewers:0
         }
 
         this.vars = {
@@ -37,11 +39,25 @@ class MockupBase extends React.Component {
 
     }
 
+    identifyUpdate = (vars) => {
+        console.log("IDEEEEE ", vars)
+        this.setState({
+            isMaster: vars.isMaster,
+            viewers: vars.viewers
+        })
+    }
+
     componentDidMount() {
         this.clientIO = new MockupClientIO(name="MAQUETA-MCU");
         this.clientIO.newFrameReady(this.displayVideoImage);
         this.clientIO.reciveUpdates(this.reciveFromServer);
-        //this.clientIO.updatesRequest(this.sendUpdates);
+        this.clientIO.socketInfo(this.identifyUpdate);
+        this.clientIO.io.on('n_users', (n_users)=>{
+            console.log("NUSERS : ", n_users)
+            this.setState({
+                viewers: n_users
+            })
+        });
 
         if(this.props.mode < 1){
             this.randomRadio();
@@ -66,8 +82,8 @@ class MockupBase extends React.Component {
                  <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th className="text-center" scope="col"># vueltas</th>
-                      <th className="text-center" scope="col">Time(s)</th>
+                      <th className="text-center" scope="col"># Rotaciones</th>
+                      <th className="text-center" scope="col">Tiempo(s)</th>
                       <th className="text-center" scope="col">Período(s)</th>
                       <th className="text-center" scope="col">Frecuencia(Hz)</th>
                     </tr>
@@ -245,6 +261,10 @@ class MockupBase extends React.Component {
         if(hide){
             return "hide"
         }
+
+        if(name == "radios-container"){
+            return "radios__container"
+        }
         
         if(name == "radios"){
             return "radios__container--button"
@@ -297,6 +317,29 @@ class MockupBase extends React.Component {
         })
     } 
 
+    renderDriverStatus = () => {
+        let isMaster = this.state.isMaster;
+        if (isMaster){
+            return <div className="socket__info--indicator__on">/Driver</div>
+        }else {
+            return <div className="socket__info--indicator__off">/Passenger</div>
+        }
+    }
+
+    renderSocketInfo = () => {
+        return(
+            <div className="socket__info--container">
+                <div className="socket__info--element">
+                   Viewers: {this.state.viewers}
+                </div>
+                {this.state.isMaster
+                    ?<div className="socket__info--indicator__on">/Driver</div>
+                    :<div className="socket__info--indicator__off">/Passenger</div>
+                }
+            </div>
+        );
+    }
+
     render() {
         return(
             <div className="section">
@@ -315,35 +358,34 @@ class MockupBase extends React.Component {
                     renderTable={this.renderTable}
                 />
 
-                <div className="section__title">
-                     {this.props.name
-                     ?<div className="title mockup__title">{this.props.name}</div>
-                     :<div className="title mockup__title">Mockup Name</div>
-                     }
-          
-                </div>
- 
                 <div className="row view__container">
 
                     <div className="col-sm-6">
                          <div className="card">
+                            
                             <div className="card-body">
-
+                                 
+                                 <div className="section__title">
+                                     {this.props.name
+                                     ?<div className="title mockup__title">EXPERIMENTO</div>
+                                     :<div className="title mockup__title">Mockup Name</div>
+                                     }
+                          
+                                </div>
+                            
                                 {this.renderPlayer()}
 
                                 <div className="light__container">
                                     <input id="lightBtn" type="checkbox" ref={this.vars.lightBtn} onClick={this.sendUpdates}/>
                                     <label htmlFor="lightBtn"></label>
-                                    {/* <i>Lámpara</i> */}
+                                    <i className="light__text">Lámpara</i>
+                                    {this.renderSocketInfo()}
                                 </div>
+
                                 <div className="play__box">
                                     <div className="play__container">
-                                    <input id="playBtn" type="checkbox" defaultValue="None" ref={this.vars.playBtn} onClick={this.sendUpdates}
-                                                defaultChecked
-                                            />
-                                            <label htmlFor="playBtn" tabIndex="1"></label>
-                                            <div className="labelBtn" id="playLabel">INICIAR</div>
-                                        {/* <ToogleButton> Play </ToogleButton> */}
+                                    <ToogleButton  ref={this.vars.playBtn} myref={this.vars.playBtn} onClick={this.sendUpdates}>INICIAR</ToogleButton>
+
                                     </div>
                                     <div className={this.classHide('record')}>
                                             <input id="recordBtn" type="checkbox" onClick={this.sendUpdates} ref={this.vars.recordBtn}/>
@@ -381,16 +423,16 @@ class MockupBase extends React.Component {
                                     <p className="text-left">2. Llene la tabla con los datos que pueda extraer del video.</p>
                                     <p className="text-left">3. Cuando esté listo proceda a realizar el cuestionario.</p> */}
                                 <p className="text-justify">
-                                1. Haciendo uso de un cronómetro, mide el tiempo que le toma a la partícula realizar las vueltas que se especifican en la primera columna de la tabla. Completa la segunda columna con estas mediciones.
+                                1. Haciendo uso de un cronómetro, mida el tiempo que le toma a la partícula realizar las rotaciones que se especifican en la primera columna de la tabla.  
                                 </p>
                                 <p className="text-justify">
-                                2. Una vez que hayas realizado todas las mediciones, pausa la rotación del disco haciendo clic en el botón “Pausar”. Si necesitas realizar nuevas mediciones, pulsalo de nuevo para que el disco comience a girar.
+                                2. Complete la segunda columna (“Tiempo”) con estas mediciones.
                                 </p>
                                 <p className="text-justify">
-                                3. Utiliza los datos de la primera y segunda columna para determinar el periodo y la frecuencia en la tercera y cuarta columna, respectivamente.
+                                3. Utilice los datos de la primera y segunda columna para determinar el periodo y la frecuencia en la tercera y cuarta columna, respectivamente.
                                 </p>
                                 <p className="text-justify">
-                                4. Para finalizar la práctica, haz clic en ¨cuestionario¨.
+                                4. Para finalizar la práctica haga clic en el botón ¨Cuestionario¨ y responda las preguntas que se plantean ahí.
                                 </p>
                                 </div>
 
@@ -400,7 +442,7 @@ class MockupBase extends React.Component {
                                         <div className="curve-arrow"></div>
                                 </div>
                                
-                                <div className="radios__container">
+                                <div className={this.classHide('radios-container')}>
                                         <div className={this.classHide('radios')}>
                                             <input type="radio" id="r1Btn" name="selector" onClick={this.sendUpdates} ref={this.vars.r1Btn} defaultChecked/>
                                             <label htmlFor="r1Btn">R = 3cm</label>

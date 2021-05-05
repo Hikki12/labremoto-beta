@@ -5,9 +5,11 @@ h1, h2, h3, p {
 
 
 .card__container {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     border: 1px solid rgba(0, 0, 0, 0.083);
+    box-shadow: 0px 0px 26px 1px rgb(44 100 175 / 10%);
+
 }
 
 .card__title {
@@ -23,13 +25,19 @@ h1, h2, h3, p {
 }
 
 .card__body {
-    padding: 10px;
+    padding: 30px;
 }
 
 .title__name {
     padding-top:5px;
     font-size: 1.35rem;
 }
+
+.card__body--topic{ 
+  flex-wrap: wrap;
+  gap: 12px;
+ }
+
 .selector__card {
     box-shadow: 0px 0px 25px 1px rgba(44, 100, 175, 0.596);
 }
@@ -104,12 +112,13 @@ h1, h2, h3, p {
 
 .description__title {  
     text-transform:uppercase;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: bold;
 }
 
 .description {
     text-align: justify;
+    font-size: 1.08rem;
 }
 
 

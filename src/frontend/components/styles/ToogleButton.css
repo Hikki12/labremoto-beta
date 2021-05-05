@@ -1,0 +1,4 @@
+.nohover:hover, .nohover:focus, .nohover:visited, .nohover:active {
+    background-color: white !important;
+    color: gray;
+}

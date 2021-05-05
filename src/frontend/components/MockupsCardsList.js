@@ -9,7 +9,8 @@ class MockupsCardsList extends React.Component {
                      
                 {this.props.data.map((mockupInfo) => (
                     
-                    <MockupCard 
+                    <MockupCard
+                        data={mockupInfo} 
                         key={mockupInfo.id}
                         name={mockupInfo.name}
                         description={mockupInfo.description}
