@@ -9,18 +9,19 @@ import ModalVideo from '../components/ModalVideo';
 import ModalQuiz from '../quiz/ModalQuiz';
 import "video-react/dist/video-react.css"; // import css
 
+
 class MockupBase extends React.Component {
 
     constructor(props){
         super(props);
 
         this.array = Array(4).fill(null).map(() => Array(3).fill(0));
-
         this.state = {
             playerOn: false,
             quizIsOpen: false,
             isMaster:false,
-            viewers:0
+            viewers:0,
+            data: {}
         }
 
         this.vars = {
@@ -40,7 +41,6 @@ class MockupBase extends React.Component {
     }
 
     identifyUpdate = (vars) => {
-        console.log("IDEEEEE ", vars)
         this.setState({
             isMaster: vars.isMaster,
             viewers: vars.viewers
@@ -51,19 +51,18 @@ class MockupBase extends React.Component {
         this.clientIO = new MockupClientIO(name="MAQUETA-MCU");
         this.clientIO.newFrameReady(this.displayVideoImage);
         this.clientIO.reciveUpdates(this.reciveFromServer);
-        this.clientIO.socketInfo(this.identifyUpdate);
-        this.clientIO.io.on('n_users', (n_users)=>{
-            console.log("NUSERS : ", n_users)
+        //this.clientIO.socketInfo(this.identifyUpdate);
+
+        this.clientIO.io.on('give control', (control)=>{
+            console.log("NUSERS : ", control);
             this.setState({
-                viewers: n_users
+                viewers: control.viewers,
+                "isMaster": control.isMaster
             })
         });
 
         if(this.props.mode < 1){
-            this.randomRadio();
-            this.randomSpeed();
-            this.randomDir();
-            this.autoStart(4000);
+            this.autoStart(3000);
         }else{
             this.clientIO.updatesRequest(this.sendUpdates);
         }
@@ -114,6 +113,9 @@ class MockupBase extends React.Component {
         
         setTimeout(()=>{
             this.vars.playBtn.current.checked = false;
+            this.randomRadio();
+            this.randomSpeed();
+            this.randomDir();
             console.log("Auto Starting...");
             this.sendUpdates();
         }, time)
@@ -129,6 +131,8 @@ class MockupBase extends React.Component {
         const min = 30;
         let speed = Math.floor(Math.random() * (max - min) + min);
         this.vars.slider.current.value = speed;
+        console.log("SSS: ", speed);
+        console.log("VVV : ", this.vars.slider.current.value);
         this.updateSpeedLabel()
     }
 
@@ -185,7 +189,7 @@ class MockupBase extends React.Component {
         this.chooseRadio(variables.Radio);
         this.vars.sliderLabelValue.current.innerHTML  = (0.3*variables.Steps).toFixed(1);
         this.vars.slider.current.value = variables.Steps;
-        this.vars.playBtn.current.checked = !variables.PlayState;
+        this.vars.playBtn.current.setChecked(variables.PlayState);
         this.vars.recordBtn.current.checked = variables.Recording;
         this.vars.slider.current.value = variables.Steps;
         this.vars.recordTime.current.value = variables.RecordingTime;
@@ -217,6 +221,9 @@ class MockupBase extends React.Component {
         }
         console.log("Variables to send: ", variables);
         this.clientIO.sendToServer(variables);
+        this.setState({
+            data: variables
+        })
     }
 
 
@@ -356,6 +363,7 @@ class MockupBase extends React.Component {
                     variables={this.state.variables}
                     dataTable={this.state.dataMatrix}
                     renderTable={this.renderTable}
+                    data={this.state.data}
                 />
 
                 <div className="row view__container">
@@ -384,7 +392,11 @@ class MockupBase extends React.Component {
 
                                 <div className="play__box">
                                     <div className="play__container">
-                                    <ToogleButton  ref={this.vars.playBtn} myref={this.vars.playBtn} onClick={this.sendUpdates}>INICIAR</ToogleButton>
+                                    <ToogleButton  ref={this.vars.playBtn} myref={this.vars.playBtn} onClick={this.sendUpdates}
+                                    isChecked
+                                    >
+                                    INICIAR
+                                    </ToogleButton>
 
                                     </div>
                                     <div className={this.classHide('record')}>
@@ -465,7 +477,7 @@ class MockupBase extends React.Component {
                                             <span id="sliderLabelValue" ref={this.vars.sliderLabelValue}>0.0</span>
                                            
                                         </div>
-                                        <input id="speedSlider" className="rs-range" type="range" step="1" min="0" max="50"
+                                        <input id="speedSlider" className="rs-range" type="range" step="1" min="30" max="100"
                                         defaultValue="0" ref={this.vars.slider} onClick={this.sendUpdates} onChange={this.updateSpeedLabel}/>
                                         <div className="box-minmax">
                                             <span>0</span><span>30</span>

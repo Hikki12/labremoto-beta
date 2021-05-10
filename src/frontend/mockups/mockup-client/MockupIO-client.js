@@ -55,17 +55,12 @@ class MockupClientIO {
         this.identifyCallback = null;
         this.io = SocketIO();
         this.configureSocketIO();
-        // setTimeout(() => {
-
-        // }, 1000);
-
     }
 
 
     configureSocketIO = () => {   
 
         this.io.on('connect', () => {
-            console.log("Connecting...", this.name);
             this.io.emit(identify_web, this.name);
             console.log("Identificando...");
         });

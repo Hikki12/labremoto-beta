@@ -1,3 +1,4 @@
+const { set } = require('mongoose');
 const SocketIO = require('socket.io');
 
 
@@ -10,6 +11,8 @@ const identify_mockup = "identify mockup";
 const identify_web = "identify web";
 const identify_ok_mockup = "identify ok mockup";
 const identify_ok_web = "identify ok web";
+
+const give_control = "give control";
 
 /*Streaming ucontrol*/
 const stream_control_web_server_mockup = "stream control";
@@ -50,7 +53,8 @@ const error_mockup_server = "error mockup server";
 
 module.exports = (server) => {
 	let n_users = 0;
-	let masterid = "";
+	let vars = null;
+	let users = {};
 
     const io = SocketIO(server, {
     	 cors: {
@@ -80,15 +84,17 @@ module.exports = (server) => {
 
         // Web client connection
 		socket.on(identify_web,(mockupName)=>{
+			io.to(socket.id).emit(identify_ok_web);
 			n_users++;
-
-			if(n_users == 1){
+			//
+			if(n_users < 2){
 				socket.master = true;
-				masterid = socket.id;
 			}
 			else {
 				socket.master = false;
 			}
+
+
 			let username = mockupName + "_" + n_users.toString();
 
 			console.log("web client join: ", username, socket.id, "Is master?: ", socket.master);
@@ -98,13 +104,15 @@ module.exports = (server) => {
 			socket.roomID = room;
 			socket.join(room);
 
-			let identify_vars = {
+			let control = {
 				"viewers": n_users,
 				"isMaster": socket.master
 			}
+			io.to(socket.id).emit(give_control, control);
 
-			io.to(socket.id).emit(identify_ok_web, identify_vars);
-			io.to(socket.roomID).emit('n_users', n_users);
+			users[socket.id] = socket;	
+			console.log("Users: ", Object.keys(users));
+
 	    	if(n_users > 0){
 	    		io.to(socket.roomID).emit(stream_control_web_server_mockup, true);
 	    	}    
@@ -124,11 +132,24 @@ module.exports = (server) => {
 		});
 
 		socket.on(response_updates_web_server, (data) => {
-			console.log("web client says :", data);
-			if (socket.master){
+			if(socket.master){
+				vars = data;
+				console.log("I'm the master : ", vars);
 				socket.to(socket.roomID).emit(response_updates_server_mockup, data);
 				socket.to(socket.roomID).emit(response_updates_server_web, data);
+			}else{
+				
+				if(vars){
+					vars["PlayState"] = data["PlayState"];
+					vars["LightState"] = data["LightState"]
+					console.log("I'm the viewer!", vars);
+					socket.to(socket.roomID).emit(response_updates_server_mockup, vars);
+					socket.to(socket.roomID).emit(response_updates_server_web, vars);	
+				}			
 			}
+			// socket.to(socket.roomID).emit(response_updates_server_mockup, data);
+			// socket.to(socket.roomID).emit(response_updates_server_web, data);
+
 			
 		});
 
@@ -176,13 +197,27 @@ module.exports = (server) => {
 		// When a user disconnects
 	    socket.on("disconnect", () => {
 	    	n_users--;
-			//
-			io.to(socket.roomID).emit('n_users', n_users);
+			delete users[socket.id];
+			let keys = Object.keys(users);
+			console.log("Users: ", keys);
+			if(n_users==1){
+
+				if(keys.length > 0){
+					let masterid = keys[0];
+					users[masterid].master = true;
+					let control = {
+						"viewers": n_users,
+						"isMaster": true
+					}
+					io.to(masterid).emit(give_control, control);
+				}
+			}
 			// if there are not users, stop streaming	    	
 	    	if(n_users < 1){ 
 	    		socket.to(socket.roomID).emit(stream_control_web_server_mockup, false);
 	    		socket.to(socket.roomID).emit(stop_server_mockup);
 	    		n_users = 0;
+				vars = null;
 	    	}
 		});
 

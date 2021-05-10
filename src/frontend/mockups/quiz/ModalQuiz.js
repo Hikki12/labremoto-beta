@@ -5,7 +5,7 @@ import './ModalQuiz.css';
 
 const quiz2 = [
 
-   {
+   { //0
       "type": "radio",
       "statement": "El periodo de una partícula se define como: ",
       "answers": [
@@ -15,7 +15,7 @@ const quiz2 = [
       ],
    },
 
-   {
+   { //1
       "type": "radio",
       "statement": "La frecuencia de una partícula se define como:",
       "answers": [
@@ -27,23 +27,23 @@ const quiz2 = [
       ],
    },   
 
-   {
-      "type": "radio",
+   { //2
+      "type": "input",
       "statement": "Analice los resultados del experimento (en la tabla) y determine el periodo del movimiento.",
       "answers": [
-         {"value": "El número de ciclos que realiza por unidad de tiempo", "isCorrect": true}
+         {"value": 0.45, "error": 0.1}
       ],
    },
 
-   {
-      "type": "radio",
+   { //3
+      "type": "input",
       "statement": "Analice los resultados del experimento (en la tabla) y determine la frecuencia del movimiento.",
       "answers": [
-         {"value": "El número de ciclos que realiza por unidad de tiempo", "isCorrect": true}
+         {"value": 2.14, "error": 0.1}
       ],
    },  
 
-   {
+   { //4
       "type": "radio",
       "statement": "La partícula describe un:",
       "answers": [
@@ -53,8 +53,8 @@ const quiz2 = [
          {"value": "MRUV", "isCorrect": false}
       ],    
    },
-
-   {
+ 
+   { //5
       "type": "radio",
       "statement": "El tiempo transcurrido, el número de rotaciones y el periodo en un movimiento circular uniforme se relacionan mediante la expresión:",
       "answers": [
@@ -65,7 +65,7 @@ const quiz2 = [
       ],    
    },
 
-   {
+   { //6
       "type": "radio",
       "statement": "El periodo de rotación de la partícula depende del radio. ",
       "answers": [
@@ -75,8 +75,6 @@ const quiz2 = [
    }    
 
 ];
-
-
 
 
 const customStyles = {
@@ -89,16 +87,47 @@ const customStyles = {
 class ModalQuiz extends React.Component {
     constructor(props){
         super(props);
+        let data = props.data;
+        this.quiz = quiz2;
+        //this.quiz = this.modifyQuiz( data, quiz2);
+
         this.state = {
            quizIndex: 0,
            points: 0,
            total: quiz2.length
         }
 
+        let array =  new Array(quiz2.length).fill(0);
+
         this.note = {
            points: 0,
-           total: quiz2.length
+           total: quiz2.length,
+           array: array
          }
+
+    }
+
+    componentDidUpdate(){
+         let data = this.props.data;
+         //this.quiz = this.modifyQuiz(quiz2)
+         this.modifyQuiz();
+         //console.log("Componente cambió ", this.props.data);
+      
+    }
+
+    modifyQuiz = () => {
+      let newquiz = quiz2;
+      let data = this.props.data;
+      if(data){
+         let rpm = 0.3*data.Steps;
+         let freq = rpm/60;
+         let period = 1/freq;
+         newquiz[2].answers[0].value = period;
+         newquiz[3].answers[0].value = freq;
+         console.log("steps: ", data.Steps, "freq: ", freq, "T: ", period);
+         this.quiz = newquiz;
+         //console.log("Q: ", this.quiz);
+      }
 
     }
 
@@ -128,14 +157,17 @@ class ModalQuiz extends React.Component {
     } 
 
     readAnswer = (value) => {
+      
       if(value){
-         this.note.points++;
+         this.note.array[this.state.quizIndex] = 1
+         this.note.points = this.note.array.reduce((a, b) => a + b, 0) ;
          if(this.note.points > this.note.total){
             this.note.points = this.note.total;
          }
       }
       else {
-         this.note.points--;
+         this.note.array[this.state.quizIndex] = 0
+         this.note.points = this.note.array.reduce((a, b) => a + b, 0) ;
          if(this.note.points < 0){
             this.note.points = 0;
          }
@@ -146,10 +178,78 @@ class ModalQuiz extends React.Component {
          total: this.note.total
       })
 
-      console.log("Tu calificación es: ",`${this.note.points} / ${this.note.total}`);
+      //console.log("Tu calificación es: ",`${this.note.points} / ${this.note.total}`);
     }
 
-    renderQuestion(question){
+    renderRadio = (question) => {
+       //console.log("QqQ: ", question)
+       return(
+          <>
+            {question.answers.map((answer, index) => {
+               return(
+                  <div className="answer__container" key={index}>
+                     <button className="btn btn-outline-primary btn-lg btn-block text-left"
+                     onClick={() => this.readAnswer(answer.isCorrect)}
+                     >
+                        {answer.value}
+                     </button>
+                  </div>
+                  
+               );
+         })}
+      </>
+       )
+    }
+
+    readInput = (e) => {
+       let text = e.target.value;
+       let correctValue = this.quiz[this.state.quizIndex].answers[0].value;
+       let error = this.quiz[this.state.quizIndex].answers[0].error;
+       let lim1 = (1 - error)*correctValue;
+       let lim2 = (1 + error)*correctValue;
+       let response = parseFloat(text);
+       console.log("correct: ", correctValue, "text: ", text, "res: ", response);
+       if (response){
+          if ( response>= lim1 && response <= lim2){
+            this.note.array[this.state.quizIndex] = 1
+          }else{
+            this.note.array[this.state.quizIndex] = 0
+          }
+       }
+       else{
+         this.note.array[this.state.quizIndex] = 0
+       }
+
+       this.note.points = this.note.array.reduce((a, b) => a + b, 0) ;
+       this.setState({
+         points: this.note.points,
+         total: this.note.total
+      })
+       
+    }
+
+    renderInput = (question) => {
+      return(
+         <>
+            <div className="answer__container" key={this.state.quizIndex}>
+               <input className="form-control form-control-lg" type="text" placeholder="Introduzca un valor, ejemplo: 2,  2.14, 4.555"
+               onChange={this.readInput}
+               />
+            </div>
+         </>
+      )
+    }
+
+    renderType = (question) => {
+         if(question.type=="radio"){
+            return this.renderRadio(question)
+         }
+         if(question.type=="input"){
+            return this.renderInput(question)
+         }
+    }
+
+    renderQuestion = (question) => {
       return(
          <div className="question__container">
             <div className="statement__container">
@@ -160,19 +260,7 @@ class ModalQuiz extends React.Component {
             </div>
             <div className="answers__container">
                <div className="answers__container--aligner">
-               
-                  {question.answers.map((answer, index) => {
-                        return(
-                           <div className="answer__container" key={index}>
-                              <button className="btn btn-outline-primary btn-lg btn-block text-left"
-                              onClick={() => this.readAnswer(answer.isCorrect)}
-                              >
-                                 {answer.value}
-                              </button>
-                           </div>
-                           
-                        );
-                  })}
+                  {this.renderType(question)}
                </div>
             </div>
        </div>      
@@ -227,13 +315,13 @@ class ModalQuiz extends React.Component {
                     <button className="btn btn-primary" onClick={this.props.onRequestClose}> x </button>
                     <div className="container scrollable">
                         <div className="container__title">
-                            <h1 className="title text-center">CUESTIONARIO</h1>
+                            <h1 className="quiz__title title text-center">CUESTIONARIO</h1>
                             <div className="info__container row">
                                 {this.renderNote()}
                             </div>
                         </div>
                            <hr className="col-10"/>
-                        {this.renderQuestion(quiz2[this.state.quizIndex])}
+                        {this.renderQuestion(this.quiz[this.state.quizIndex])}
 
                         <div className="quiz__buttons--section">
                            <div className="quiz__buttons--container offset-9">

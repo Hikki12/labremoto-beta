@@ -3,13 +3,20 @@
     /* border: 2px solid #2f57ac; */
 }
 
+.quiz__title {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
 .question__container {
     margin-top: 2rem;
     height: 22rem;
 }
 
 .note__container {
-    font-size:1.5rem;
+    font-size:1.3rem;
+    color: gray;
+    font-weight: bold;
 }
 
 .statement__container {

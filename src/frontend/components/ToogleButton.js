@@ -7,15 +7,33 @@ class ToogleButton extends React.Component {
     constructor(props){
         super(props);
         let value = false;
+        if(props.isChecked){
+            value = true;
+        }
+
         this.state = {
             isChecked: value
         }
+    }
+
+    componentDidMount(){
+        
+    }
+
+    setChecked = (state) => {
+        this.setState({
+            isChecked: state
+        });
+       
     }
 
     handleClick = () => {
         this.setState({
             isChecked: !this.state.isChecked
         });
+
+        
+
         if(this.props.myref){
             this.props.myref.current.checked = this.state.isChecked;
         }
@@ -27,6 +45,7 @@ class ToogleButton extends React.Component {
     }
 
     renderButton = () => {
+
         if(this.state.isChecked){
             return(
                 <button className="btn btn-outline-secondary nohover"  aria-pressed="true" onClick={this.handleClick}>
