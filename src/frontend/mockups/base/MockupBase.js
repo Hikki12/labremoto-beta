@@ -113,6 +113,7 @@ class MockupBase extends React.Component {
         
         setTimeout(()=>{
             this.vars.playBtn.current.checked = false;
+            this.vars.lightBtn.current.checked = true;
             this.randomRadio();
             this.randomSpeed();
             this.randomDir();

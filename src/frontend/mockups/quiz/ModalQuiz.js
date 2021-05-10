@@ -2,6 +2,9 @@ import React from 'react';
 import Modal from 'react-modal';
 import './ModalQuiz.css';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 
 const quiz2 = [
 
@@ -55,17 +58,25 @@ const quiz2 = [
    },
  
    { //5
-      "type": "radio",
-      "statement": "El tiempo transcurrido, el número de rotaciones y el periodo en un movimiento circular uniforme se relacionan mediante la expresión:",
+      "type": "input",
+      "statement": "¿Cuánto tiempo en segundos le tomaría  a la partícula  realizar 100 vueltas?",
       "answers": [
-         {"value": "MCU", "isCorrect": true},
-         {"value": "MCUV", "isCorrect": false},
-         {"value": "MRU", "isCorrect": false},
-         {"value": "MRUV", "isCorrect": false}
+         {"value": 10 , "error": 0.05},
       ],    
    },
 
    { //6
+      "type": "radio",
+      "latex":true,
+      "statement": "El tiempo transcurrido, el número de rotaciones y el periodo en un movimiento circular uniforme se relacionan mediante la expresión:",
+      "answers": [
+         {"value": "$\\triangle T/n$", "isCorrect": true},
+         {"value": "$n/\\triangle T $", "isCorrect": false},
+         {"value": "$ 2\\pi \\triangle n $", "isCorrect": false},
+      ],    
+   },
+
+   { //7
       "type": "radio",
       "statement": "El periodo de rotación de la partícula depende del radio. ",
       "answers": [
@@ -122,8 +133,10 @@ class ModalQuiz extends React.Component {
          let rpm = 0.3*data.Steps;
          let freq = rpm/60;
          let period = 1/freq;
+         let n_vueltas = 100/period;
          newquiz[2].answers[0].value = period;
          newquiz[3].answers[0].value = freq;
+         newquiz[5].answers[0].value = n_vueltas;
          console.log("steps: ", data.Steps, "freq: ", freq, "T: ", period);
          this.quiz = newquiz;
          //console.log("Q: ", this.quiz);
@@ -191,7 +204,11 @@ class ModalQuiz extends React.Component {
                      <button className="btn btn-outline-primary btn-lg btn-block text-left"
                      onClick={() => this.readAnswer(answer.isCorrect)}
                      >
-                        {answer.value}
+                        {question.latex
+                           ?<Latex>{answer.value}</Latex>
+                           :answer.value
+                        }
+                        
                      </button>
                   </div>
                   
