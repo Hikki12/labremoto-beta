@@ -88,6 +88,47 @@ const quiz2 = [
 ];
 
 
+const quiz3 = [
+
+   { //0
+      "type": "radio",
+      "statement": "La velocidad angular se puede definir como:",
+      "answers": [
+         {"value": "El ángulo barrido en la unidad de tiempo", "isCorrect": true},
+         {"value": "El arco recorrido en la unidad de tiempo", "isCorrect": false},
+         {"value": "las vueltas que da que móvil por segundo", "isCorrect": false}
+      ],
+   },
+   { //1
+      "type": "radio",
+      "statement": "La velocidad angular depende del sentido de rotación de la partícula.",
+      "answers": [
+         {"value": "Verdadero", "isCorrect": true},
+         {"value": "Falso", "isCorrect": false},
+      ],
+   },
+   { //2
+      "type": "radio",
+      "statement": "La velocidad angular de la partícula en el experimento tiene signo:",
+      "answers": [
+         {"value": "Positivo", "isCorrect": true},
+         {"value": "Negativo", "isCorrect": false},
+         {"value": "No tiene signo", "isCorrect": false}
+      ],
+   },
+   { //3
+      "latex":true,
+      "type": "radio",
+      "statement": "La velocidad angular de la partícula en el experimento tiene signo:",
+      "answers": [
+         {"value": "$real$", "isCorrect": true},
+         {"value": "$real^{2}$", "isCorrect": false},
+         {"value": "$real^{3}$", "isCorrect": false},
+         {"value": "$real/2$", "isCorrect": false}
+      ],
+   },
+]
+
 const customStyles = {
     content : {
       marginTop: '1rem',
@@ -100,19 +141,22 @@ class ModalQuiz extends React.Component {
         super(props);
         let data = props.data;
         this.quiz = quiz2;
+        if(this.props.mode == 1){
+           this.quiz = quiz3;
+        }
         //this.quiz = this.modifyQuiz( data, quiz2);
 
         this.state = {
            quizIndex: 0,
            points: 0,
-           total: quiz2.length
+           total: this.quiz.length
         }
 
-        let array =  new Array(quiz2.length).fill(0);
+        let array =  new Array(this.quiz.length).fill(0);
 
         this.note = {
            points: 0,
-           total: quiz2.length,
+           total: this.quiz.length,
            array: array
          }
 
@@ -121,7 +165,10 @@ class ModalQuiz extends React.Component {
     componentDidUpdate(){
          let data = this.props.data;
          //this.quiz = this.modifyQuiz(quiz2)
-         this.modifyQuiz();
+         if(this.props.mode != 1){
+            this.modifyQuiz();
+         }
+
          //console.log("Componente cambió ", this.props.data);
       
     }
@@ -137,9 +184,8 @@ class ModalQuiz extends React.Component {
          newquiz[2].answers[0].value = period;
          newquiz[3].answers[0].value = freq;
          newquiz[5].answers[0].value = n_vueltas;
-         console.log("steps: ", data.Steps, "freq: ", freq, "T: ", period);
+         //console.log("steps: ", data.Steps, "freq: ", freq, "T: ", period);
          this.quiz = newquiz;
-         //console.log("Q: ", this.quiz);
       }
 
     }
@@ -285,7 +331,7 @@ class ModalQuiz extends React.Component {
     }
 
     nextQuestion = () => {
-       let n_questions = quiz2.length - 1;
+       let n_questions = this.quiz.length - 1;
        let index = this.state.quizIndex;
        if(index < n_questions){
           this.setState({

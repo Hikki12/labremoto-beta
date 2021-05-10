@@ -132,7 +132,15 @@ class MockupCard extends React.Component {
                     </div>
                     <div className="card__body--controls row">
                         <div className="col-lg-1">
-                            <Link  to={this.props.url + "/" + this.state.index.toString()} className="btn btn-outline-info">Entrar</Link>
+                            <Link  
+                                to={{
+                                    pathname: this.props.url + "/" + this.state.index.toString(),
+                                    state: {info: this.props.data} // your data array of objects
+                                  }} 
+                                className="btn btn-outline-info"
+                            >
+                                Entrar
+                            </Link>
                             {/* <button className="btn btn-outline-info" type="button">Entrar</button> */}
                         </div>
                         <div className="col-lg-1">

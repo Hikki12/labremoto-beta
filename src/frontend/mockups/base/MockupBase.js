@@ -8,13 +8,18 @@ import RadioButton from '../components/RadioButton';
 import ModalVideo from '../components/ModalVideo';
 import ModalQuiz from '../quiz/ModalQuiz';
 import "video-react/dist/video-react.css"; // import css
-
+import PropTypes from "prop-types";
+import { withRouter } from "react-router";
+import { ThemeConsumer } from 'react-bootstrap/esm/ThemeProvider';
+import { type } from 'jquery';
 
 class MockupBase extends React.Component {
 
+
+
     constructor(props){
         super(props);
-
+        
         this.array = Array(4).fill(null).map(() => Array(3).fill(0));
         this.state = {
             playerOn: false,
@@ -37,6 +42,7 @@ class MockupBase extends React.Component {
             recordTime: React.createRef(),
             sliderLabelValue: React.createRef()
         }
+        
 
     }
 
@@ -48,6 +54,7 @@ class MockupBase extends React.Component {
     }
 
     componentDidMount() {
+        console.log("PRROPSS  ", this.props)
         this.clientIO = new MockupClientIO(name="MAQUETA-MCU");
         this.clientIO.newFrameReady(this.displayVideoImage);
         this.clientIO.reciveUpdates(this.reciveFromServer);
@@ -74,27 +81,40 @@ class MockupBase extends React.Component {
     }
 
     renderTable = () => {
-        const rows = [1,2,3,4];
-        const cols = [1,2,3];
+        let mode = parseInt(this.props.mode);
+        let titles = [];
+        let rows = [];
+        let cols = [];
+        if(mode === 0 || mode === 2){
+            console.log("AAAAAqui")
+            titles = ["# Rotaciones", "Tiempo(s)", "Período (s)", "Frecuencia(Hz)"]
+            rows = [5,10,15,20];
+            cols = [1,2,3];
+        }
+        if(mode == 1){
+            titles = ["Desplazamiento Angular (rad)", "Tiempo(s)", "Velocidad Angular (rad/s)"]
+            rows = ["3pi","4pi","5pi","6pi","7pi"];
+            cols = [1,2];
+        }
+        console.log("mm ", mode)
         return(
             <div className="table__container">
                  <table className="table table-bordered">
                   <thead>
                     <tr>
-                      <th className="text-center" scope="col"># Rotaciones</th>
-                      <th className="text-center" scope="col">Tiempo(s)</th>
-                      <th className="text-center" scope="col">Período(s)</th>
-                      <th className="text-center" scope="col">Frecuencia(Hz)</th>
+                        {titles.map((title) =>{
+                            return <th className="text-center" scope="col">{title}</th>
+                        })}
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.map((row) => {
+                    {rows.map((row, index) => {
                         return(
                             <tr key={row}>
-                                <th className="text-center" scope="row">{5*row}</th>
-                                {cols.map((col) => {
+                                <th className="text-center" scope="row">{row}</th>
+                                {cols.map((col, index) => {
                                     return(
-                                        <td key={col}>
+                                        <td key={index}>
                                             <input className="text-center" onChange={(e) => this.onChangeTable(row, col, e)}/>
                                         </td>
                                     );
@@ -263,7 +283,7 @@ class MockupBase extends React.Component {
         let mode = this.props.mode;
         let hide = true;
 
-        if (mode >= 1){
+        if (mode >= 2){
             hide = false;
         }
         if(hide){
@@ -348,6 +368,27 @@ class MockupBase extends React.Component {
         );
     }
 
+    renderInstructions = () => {
+        return(
+        // {this.props.mockupInfo}
+        <div className="instructions__container mt-5">
+                {/* <p className="text-left">1. Observe con atención el experimento.</p>
+                <p className="text-left">2. Llene la tabla con los datos que pueda extraer del video.</p>
+                <p className="text-left">3. Cuando esté listo proceda a realizar el cuestionario.</p> */}
+            {this.props.location.state.info &&
+
+                this.props.location.state.info.instructions[this.props.mode].map((instruction, index)=>{
+                    return(
+                        <p className="text-justify" key={index}>
+                            {`${index + 1}-. ${instruction}`}
+                        </p>
+                    )
+                })
+            }
+        </div>
+        );
+    }
+
     render() {
         return(
             <div className="section">
@@ -365,6 +406,7 @@ class MockupBase extends React.Component {
                     dataTable={this.state.dataMatrix}
                     renderTable={this.renderTable}
                     data={this.state.data}
+                    mode={this.props.mode}
                 />
 
                 <div className="row view__container">
@@ -430,24 +472,9 @@ class MockupBase extends React.Component {
                                 <div className="btn__container mt-5">
                                     <button className="btn btn-primary mr-5" onClick={this.openQuiz}>Cuestionario</button>
                                 </div>
+
+                                {this.renderInstructions()}
                                
-                                <div className="instructions__container mt-5">
-                                    {/* <p className="text-left">1. Observe con atención el experimento.</p>
-                                    <p className="text-left">2. Llene la tabla con los datos que pueda extraer del video.</p>
-                                    <p className="text-left">3. Cuando esté listo proceda a realizar el cuestionario.</p> */}
-                                <p className="text-justify">
-                                1. Haciendo uso de un cronómetro, mida el tiempo que le toma a la partícula realizar las rotaciones que se especifican en la primera columna de la tabla.  
-                                </p>
-                                <p className="text-justify">
-                                2. Complete la segunda columna (“Tiempo”) con estas mediciones.
-                                </p>
-                                <p className="text-justify">
-                                3. Utilice los datos de la primera y segunda columna para determinar el periodo y la frecuencia en la tercera y cuarta columna, respectivamente.
-                                </p>
-                                <p className="text-justify">
-                                4. Para finalizar la práctica haga clic en el botón ¨Cuestionario¨ y responda las preguntas que se plantean ahí.
-                                </p>
-                                </div>
 
                                 <div className={this.classHide('clockwise')}>
                                         <input id="clockwiseBtn" type="checkbox" onClick={this.sendUpdates} ref={this.vars.dirBtn}/>
@@ -496,4 +523,4 @@ class MockupBase extends React.Component {
 
 }
 
-export default MockupBase;
+export default withRouter(MockupBase);
