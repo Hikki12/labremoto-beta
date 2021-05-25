@@ -55,6 +55,7 @@ module.exports = (server) => {
 	let n_users = 0;
 	let vars = null;
 	let users = {};
+	let mockups = {};
 
     const io = SocketIO(server, {
     	 cors: {
@@ -68,22 +69,29 @@ module.exports = (server) => {
 		
     	// Mockup connection
     	socket.on(identify_mockup, (mockupName) => {
-			console.log("mockup join: ", mockupName, socket.id);
-
+			//console.log("mockup join: ", mockupName, socket.id);
+			mockups[socket.id] = socket;
 			let room = mockupName + "-ROOM";
 			socket.mockupName = mockupName;
 			socket.roomID = room;
 			io.to(socket.id).emit(identify_ok_mockup);
 			socket.join(room);	
 
+			socket.isUser = false;
+
 			if(n_users > 0){
 				io.to(socket.id).emit(stream_control_web_server_mockup, true);
 			}
+			console.log("------- Connection Event -------");
+			console.log("Users: ", Object.keys(users));
+			console.log("Mockups: ", Object.keys(mockups));
 
     	});
 
         // Web client connection
-		socket.on(identify_web,(mockupName)=>{
+		socket.on(identify_web, (mockupName)=>{
+			socket.isUser = true;
+
 			io.to(socket.id).emit(identify_ok_web);
 			n_users++;
 			//
@@ -97,7 +105,7 @@ module.exports = (server) => {
 
 			let username = mockupName + "_" + n_users.toString();
 
-			console.log("web client join: ", username, socket.id, "Is master?: ", socket.master);
+			//console.log("web client join: ", username, socket.id, "Is master?: ", socket.master);
 
 			let room = mockupName + "-ROOM";
 			socket.username = username;
@@ -108,26 +116,29 @@ module.exports = (server) => {
 				"viewers": n_users,
 				"isMaster": socket.master
 			}
+
 			io.to(socket.id).emit(give_control, control);
 
 			users[socket.id] = socket;	
+			console.log("------- Connection Event -------");
 			console.log("Users: ", Object.keys(users));
-
+			console.log("Mockups: ", Object.keys(mockups));
+			
 	    	if(n_users > 0){
-	    		io.to(socket.roomID).emit(stream_control_web_server_mockup, true);
+	    		socket.to(room).emit(stream_control_web_server_mockup, true);
 	    	}    
 
 		});
 
 		/*Video Streaming*/
 		socket.on(stream_video_mockup_server, (frame64) => {
-			//console.log("reciving frame... ", n_users);
+			//console.log("reciving frame... ");
 			socket.to(socket.roomID).emit(stream_video_server_web, frame64);
 		});
 
 		/*Responses for updates*/
 		socket.on(response_updates_mockup_server, (data) => {
-			console.log("mockup saids :", data);
+			console.log("mockup says :", data);
 			socket.to(socket.roomID).emit(response_updates_server_web, data);
 		});
 
@@ -196,10 +207,16 @@ module.exports = (server) => {
 
 		// When a user disconnects
 	    socket.on("disconnect", () => {
-	    	n_users--;
+	    	if(socket.isUser){
+	    		n_users--;	    		
+	    	}
+
+			delete mockups[socket.id];
 			delete users[socket.id];
 			let keys = Object.keys(users);
+			console.log("------ Disconnection Event --------");
 			console.log("Users: ", keys);
+			console.log("Mockups: ", Object.keys(mockups))
 			if(n_users==1){
 
 				if(keys.length > 0){

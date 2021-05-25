@@ -1,6 +1,5 @@
 import React from 'react';
 import MockupBase from '../base/MockupBase';
-import MCUControls from './MCUControls';
 
 class MockupMCU extends React.Component {
 
@@ -8,7 +7,7 @@ class MockupMCU extends React.Component {
 		return(
 	        <>
 	            <MockupBase 
-					name="MAQUETA-MCU" 
+					name="MAQUETA-FREFALL" 
 					mode={this.props.match.params.mode}
 				/>
 	        </>

@@ -86,7 +86,7 @@ class MockupBase extends React.Component {
         let rows = [];
         let cols = [];
         if(mode === 0 || mode === 2){
-            console.log("AAAAAqui")
+            //console.log("AAAAAqui")
             titles = ["# Rotaciones", "Tiempo(s)", "Período (s)", "Frecuencia(Hz)"]
             rows = [5,10,15,20];
             cols = [1,2,3];
@@ -96,7 +96,7 @@ class MockupBase extends React.Component {
             rows = ["3pi","4pi","5pi","6pi","7pi"];
             cols = [1,2];
         }
-        console.log("mm ", mode)
+        //console.log("mm ", mode)
         return(
             <div className="table__container">
                  <table className="table table-bordered">

@@ -7,8 +7,7 @@ import NotFound from './screens/NotFound';
 import Bookings from './screens/Bookings';
 import MockupForm from './screens/MockupForm';
 import MockupMCU from './mockups/mcu/MockupMCU';
-// import SubPractices from './screens/SubPractices';
-
+import MockupFreefall from './mockups/freefall/MockupFrefall';
 
 function App(){
     return(
@@ -20,6 +19,7 @@ function App(){
                     <Route path="/reservas" component={Bookings} exact/>
                     <Route path="/addMockup" component={MockupForm} exact/>
                     <Route path="/mcu/:mode" component={MockupMCU}></Route>
+                    <Route path="/freefall/:mode" component={MockupFreefall}></Route>
                     {/* <Route path="/:mockupname/subpractices" component={SubPractices} exact/>
                     <Route path="/:mockupname/subpractices/:index" component={MockupMCU}></Route> */}
                     <Route component={NotFound} />
