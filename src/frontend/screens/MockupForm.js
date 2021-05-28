@@ -29,7 +29,7 @@ const MockupForm = () =>{
     }
 
     return (
-        <section className="container mockup__form--section">
+        <section className="container">
             <div className="section__title">
                 <h1 className="title text-center"> AÑADIR NUEVA MAQUETA </h1>
             </div>  

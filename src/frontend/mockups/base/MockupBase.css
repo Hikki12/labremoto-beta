@@ -63,11 +63,6 @@ table td input {
     color: orange;
 }
 
-.video {
-    margin-left:auto;
-    margin-right: auto;
-    display: block;
-}
 
 .controls__container{ 
     border: 2px solid rgba(0,0,0, 0.05);
@@ -86,8 +81,8 @@ table td input {
 
 .video {
     /* border: 2px solid blue; */
-    width: 495px;
-    height: 490px; 
+    width: 25rem;
+    height: 24rem; 
 
 }
 

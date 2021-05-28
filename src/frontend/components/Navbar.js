@@ -10,33 +10,39 @@ AOS.init();
 class Navbar extends React.Component {
     render(){
         return( 
-            <header className="header-transparent container">
+
+            <div className="container">
                 <nav className="navbar navbar-expand-lg navbar-light">
-                    <NavLink to="/" className="logo__text">LabRemotoUTPL</NavLink>
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <NavLink className="navbar-brand col-1 col-md-9 text-primary my-3" to="/">
+                        <h3 className="text-primary">LabRemotoUTPL</h3>
+                    </NavLink>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-                        <ul className="navbar-nav p-auto">
-                            <li className="nav-item">
-                                <NavLink to="/" className="nav-link">Home</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/home" className="nav-link">Panel</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/reservas" className="nav-link">Reservas</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/home" className="nav-link link-enhanced">Inicio sesión</NavLink>
-                            </li>
+                    <div className="collapse navbar-collapse text-center" id="navbarNav">
+                        <div className="">
+                            <ul className="navbar-nav">
+                                <li className="nav-item active">
+                                    <NavLink to="/" className="nav-link text-muted">
+                                        Home
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/home" className="nav-link text-muted">
+                                        Experimentos
+                                    </NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink to="/Reservas" className="nav-link text-muted">
+                                        Reservas
+                                    </NavLink>
+                                </li>
+                            </ul>
+                        </div>
 
-                        </ul>
-                    
                     </div>
                 </nav>
-            </header>
-
+            </div>
         )
     }
 }

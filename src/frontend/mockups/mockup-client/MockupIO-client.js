@@ -42,6 +42,7 @@ const stop_server_web = "stop server web";
 /*Routes for error*/
 const error_mockup_server = "error mockup server"; 
 
+const give_control = "give control";
 
 class MockupClientIO {
 
@@ -53,6 +54,7 @@ class MockupClientIO {
         this.reciveQuizCallback = null;
         this.stopCallback = null;
         this.identifyCallback = null;
+        this.giveControllCallback=null;
         this.io = SocketIO();
         this.configureSocketIO();
     }
@@ -72,6 +74,12 @@ class MockupClientIO {
             }
             //this.io.emit(request_updates_web_server);
         });
+
+        this.io.on(give_control, (data) => {
+            if(this.giveControllCallback){
+                this.giveControllCallback(data);
+            }
+        })
 
         this.io.on(stream_video_server_web, (frame64) => {
             //console.log("Image video recived!", frame64);
@@ -138,11 +146,16 @@ class MockupClientIO {
         this.identifyCallback = cb;
     }
 
+    adminControl = (cb) => {
+        this.giveControllCallback = cb;
+    }
+
     stop = () => {
         this.io.emit(stop_web_server);
     }
 
     close = () => {
+        this.stop();
         this.io.disconnect();
     }
 

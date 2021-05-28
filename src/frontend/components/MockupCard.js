@@ -8,7 +8,7 @@ import './styles/MockupCard.css';
 class MockupCard extends React.Component {
     constructor(props){
         super(props);
-        let description = "something...";
+        let description = "...";
         let topic = "...";
         let materials = "...";
         if(props.descriptions){
@@ -62,7 +62,7 @@ class MockupCard extends React.Component {
     }
     render(){
         return(
-            <div className="card__container">
+            <div className="card__container mx-4">
 
                 <MockupFormEditor
                     isOpen={this.state.modalIsOpen}
@@ -70,41 +70,27 @@ class MockupCard extends React.Component {
                 />
 
                 <div className="card__title">
-                    <div className="col-10">
+                    <div className="col-7 col-md-10">
                         <h1 className="title__name">{this.props.name}</h1>
                     </div>
                     
-                    <div className="col-2">
+                    <div className="col-5 col-md-2">
                     {this.props.descriptions &&
                     
-                        <select onChange={this.selectorChange} className="form-control form-control-md selector__card">    
-                            <option defaultValue="1" >Práctica 1</option>
-                            <option defaultValue="2">Práctica 2</option>
-                            <option defaultValue="3">Práctica 3</option>
+                        <select onChange={this.selectorChange} className="form-control form-control-md">  
+                            {this.props.descriptions.map((value, index) =>{
+                                return(
+                                    <option key={`opt-${index}`} defaultValue={index}>
+                                        {`Práctica ${index + 1}`}
+                                    </option>
+                                )
+                            })}  
                         </select>
                         }
                     </div>
                
                 </div>
                 <div className="card__body">
-                    {/* <div className="card__body--status">
-                        <h2 className="title__status">Estado:</h2>
-                        <div className="status__indicators">
-                            <div className="indicator__container">
-                                <div className="indicator__off"></div>
-                                <h2 className="indicator__subtitle">Online</h2>
-                            </div>
-                            <div className="indicator__container">
-                                <div className="indicator__off"></div>
-                                <h2 className="indicator__subtitle">Ocupada</h2>
-                            </div>
-                            <div className="indicator__container">
-                                <div className="indicator__off"></div>
-                                <h2 className="indicator__subtitle">Reservada</h2>
-                            </div>
-                        </div>
-
-                    </div> */}
                     <div className="card__body--topic">
                         <div className="description__title--container">
                             <h2 className="description__title">TEMA:</h2>                         
@@ -116,8 +102,8 @@ class MockupCard extends React.Component {
                     <hr/>
                     <div className="card__body--topic">
                         <h2 className="description__title">MATERIALES:</h2>
-                        <div className="description__body--container">
-                            <p className="description">{this.state.materials}</p>
+                        <div>
+                            <p className="overflow-auto">{this.state.materials}</p>
                         </div>    
                     </div>
                     <hr/>
@@ -125,12 +111,13 @@ class MockupCard extends React.Component {
                         <h2 className="description__title">Descripción:</h2>
                     </div>
 
-                    <div className="card__body--description">
+                    <div>
                         <div className="description__body--container">
                             <p className="description">{this.state.description}</p>
                         </div>
                     </div>
-                    <div className="card__body--controls row">
+                    <hr/>
+                    <div className="card__body--controls row mt-4">
                         <div className="col-lg-1">
                             <Link  
                                 to={{
@@ -143,16 +130,16 @@ class MockupCard extends React.Component {
                             </Link>
                             {/* <button className="btn btn-outline-info" type="button">Entrar</button> */}
                         </div>
-                        <div className="col-lg-1">
+                        <div className="col-md-1">
                             <button className="btn btn-outline-success" type="button">Reserva</button>
                         </div>
-                        <div className="col-lg-2">
+                        <div className="col-md-1">
                             <button className="btn btn-outline-info" type="button">?</button>
                         </div>
-                        <div className="col-lg-2">
+                        <div className="col-md-1">
                             <button className="btn btn-warning" onClick={this.editModal} type="button">Editar</button>
                         </div>
-                        <div className="col-lg-1">
+                        <div className="col-md-1">
                             <button className="btn btn-danger" type="button">Eliminar</button>
                         </div>
                     </div>

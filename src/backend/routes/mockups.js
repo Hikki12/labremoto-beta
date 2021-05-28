@@ -1,10 +1,6 @@
 const express = require('express');
 const router = new express.Router();
 
-/*
-
-
-*/
 
 const mockups = {
     "mockups":[
@@ -20,6 +16,7 @@ const mockups = {
                 "Velocidad angular",
                 "..."
             ],
+            
             "materials":[
                 "Cronómetro y calculadora",
                 "Cronómetro y calculadora",
