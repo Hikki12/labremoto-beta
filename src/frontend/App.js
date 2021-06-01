@@ -19,7 +19,7 @@ function App(){
                     <Route path="/reservas" component={Bookings} exact/>
                     <Route path="/addMockup" component={MockupForm} exact/>
                     <Route path="/mcu/:mode" component={MockupMCU}></Route>
-                    {/* <Route path="/freefall/:mode" component={MockupFreefall}></Route> */}
+                    <Route path="/freefall/:mode" component={MockupFreefall}></Route>
                     {/* <Route path="/:mockupname/subpractices" component={SubPractices} exact/>
                     <Route path="/:mockupname/subpractices/:index" component={MockupMCU}></Route> */}
                     <Route component={NotFound} />

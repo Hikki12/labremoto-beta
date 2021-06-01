@@ -1,5 +1,4 @@
 import React from 'react'
-import MockupBaseControls from './MockupBaseControls';
 import ClientIO from '../mockup-client/MockupIO-client';
 import ModalQuiz from '../quiz/ModalQuiz';
 
@@ -43,15 +42,14 @@ class MockupBase extends React.Component {
     }
 
     randomDir = () => {
-		let dir = Math.random() < 0.5;
-        this.variables.dirBtn.current.setChecked(dir);
+        this.variables.dirBtn.current.checked = Math.random() < 0.5;
     }
 
     autoStart = (time=1000) => {
         
         setTimeout(()=>{
-            this.vars.playBtn.current.checked = false;
-            this.vars.lightBtn.current.checked = true;
+            this.variables.playBtn.current.setChecked(true);
+            this.variables.lightBtn.current.setChecked(true);
             this.randomSpeed();
             this.randomDir();
             console.log("Auto Starting...");
@@ -66,11 +64,13 @@ class MockupBase extends React.Component {
 		this.client.newFrameReady(this.displayImage);
 		this.client.reciveUpdates(this.setRecivedVariables);
 		this.client.adminControl(this.updateSocketInfo);
-		this.client.identifyCallback = this.sendUpdates;
-		
-		
-		if(this.props.match.params.mode < 1) {
-			this.autoStart(3500);
+		this.client.identifyCallback = this.sendUpdates;	
+
+		let mode = parseInt(this.props.match.params.mode);
+
+		if(mode < 1) {
+			
+			this.autoStart(2000);
 		}
 	}
 
@@ -334,7 +334,6 @@ class MockupBase extends React.Component {
 			</div>
 		)
 	}
-
 }
 
 export default MockupBase;
