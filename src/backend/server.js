@@ -29,7 +29,7 @@ const HTML_FILE = path.join(DIST_DIR, 'index.html'); // NEW
 console.log("DIST: ", DIST_DIR)
 
 //console.log("Process: ", process.env.MODE)
-if (env.MODE === "PRODUCTIONx"){
+if (env.MODE === "PRODUCTION"){
 	console.log("Aquí ")
 	app.use(express.static(DIST_DIR));
 	app.get('/', (req, res) => {
