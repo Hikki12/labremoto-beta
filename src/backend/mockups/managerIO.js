@@ -1,4 +1,5 @@
 const { set } = require('mongoose');
+const { reset } = require('nodemon');
 const SocketIO = require('socket.io');
 
 
@@ -51,14 +52,65 @@ const stop_server_web = "stop server web";
 const error_mockup_server = "error mockup server"; 
 
 
+setNewMaster = (io, room, rooms) => {
+	let keys = Object.keys(rooms[room].users);
+	if(keys.length > 0){
+		rooms[room].master = keys[0];
+		rooms[room].users[keys[0]].isMaster = true;
+		rooms[room].users[keys[0]].lastActivity = new Date();
+		const n_users = rooms[room].n_users;
+		let control = {
+			"viewers": n_users,
+			"isMaster": true
+		}
+		io.to(rooms[room].master).emit(give_control, control);
+	}else{
+		rooms[room].master = "";
+	}
+}
+
+let rooms = {};
+let globalIO = null;
+let maxInactivityTime = 20*60000; //ms
+
+
+checkInactivity = () => {
+	let currentRooms = Object.keys(rooms);
+	currentRooms.forEach((room) => {
+		if(rooms[room]){
+			let masterid = rooms[room].master;
+			if(masterid){
+				let master = rooms[room].users[masterid];
+				if(master){
+					let lastActivity = master.lastActivity;
+					let elapsedTime = new Date() - lastActivity;
+					//console.log("masterid: ", masterid, elapsedTime);
+					if(elapsedTime >= maxInactivityTime){
+						if(globalIO){
+							globalIO.to(masterid).emit(stop_server_web);
+						}
+						master.disconnect(true);
+					}
+				}
+
+			}
+		}
+		
+	});
+}
+
+
+let checkTimer = setInterval(checkInactivity, 60000);
+
+
 module.exports = (server) => {
-	let rooms = {};
 
     const io = SocketIO(server, {
     	 cors: {
 		    origin: '*',
 		  }
     });
+	globalIO = io;
 
     io.on('connection', (socket) => {
 
@@ -142,6 +194,20 @@ module.exports = (server) => {
 				socket.isMaster = false;
 			}
 
+			if (socket.isMaster){
+				socket.lastActivity = new Date();
+			}else{
+				let masterid = rooms[socket.room].master;
+				let masterSocket = rooms[socket.room].users[masterid];
+				let lastActivity =  masterSocket.lastActivity;
+				let elapsedTime = new Date() - lastActivity;	
+				if(elapsedTime >= maxInactivityTime){
+					io.to(masterid).emit(stop_server_web);
+					masterSocket.disconnect(true);
+				}			
+			}
+			
+
 			let control = {
 				"viewers": n_users,
 				"isMaster": socket.isMaster
@@ -173,16 +239,26 @@ module.exports = (server) => {
 
 		socket.on(response_updates_web_server, (data) => {
 			if(socket.isMaster){
+				socket.lastActivity = new Date();
 				rooms[socket.room].vars = data;
 				io.to(socket.room).emit(response_updates_server_mockup, data);
 				io.to(socket.room).emit(response_updates_server_web, data);
 			}else{
+				let masterid = rooms[socket.room].master;
+				let masterSocket = rooms[socket.room].users[masterid];
+				let lastActivity =  masterSocket.lastActivity;
+				let elapsedTime = new Date() - lastActivity;
+				console.log("Elapsed Time: ", elapsedTime);
+				if(elapsedTime >=  maxInactivityTime){
+					masterSocket.disconnect(true);
+					rooms[socket.room].vars = data;
+				}
 				
 				if(rooms[socket.room].vars){
 					let vars = rooms[socket.room].vars;
 					rooms[socket.room].vars["PlayState"] = data["PlayState"];
 					rooms[socket.room].vars["LightState"] = data["LightState"]
-					console.log("I'm the viewer!", rooms[socket.room].vars);
+					//console.log("I'm the viewer!", rooms[socket.room].vars);
 					io.to(socket.room).emit(response_updates_server_mockup, vars);
 					io.to(socket.room).emit(response_updates_server_web, vars);	
 				}			
@@ -240,20 +316,8 @@ module.exports = (server) => {
 			rooms[socket.room].n_users = Object.keys(rooms[socket.room].users).length;
 			
 			if(socket.isMaster){
-				let keys = Object.keys(rooms[socket.room].users);
-				if(keys.length > 0){
-					rooms[socket.room].master = keys[0];
-					rooms[socket.room].users[keys[0]].isMaster = true;
-					const n_users = rooms[socket.room].n_users;
-					let control = {
-						"viewers": n_users,
-						"isMaster": true
-					}
-					io.to(rooms[socket.room].master).emit(give_control, control);
-				}else{
-					rooms[socket.room].master = "";
-				}
-
+				console.log("Setting new master...");
+				setNewMaster(io, socket.room, rooms);
 			}
 			if(socket.isMockup){
 				rooms[socket.room].mockup = ""

@@ -80,6 +80,7 @@ class MockupFreefall extends React.Component {
 		this.client.newFrameReady(this.displayImage);
 		this.client.reciveUpdates(this.setRecivedVariables);
 		this.client.adminControl(this.updateSocketInfo);
+		this.client.wasStop(this.closeApp);
 		this.client.identifyCallback = this.sendUpdates;	
 
 		let mode = parseInt(this.props.match.params.mode);
