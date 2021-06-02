@@ -52,10 +52,7 @@ const error_mockup_server = "error mockup server";
 
 
 module.exports = (server) => {
-	let n_users = 0;
-	let vars = null;
-	let users = {};
-	let mockups = {};
+	let rooms = {};
 
     const io = SocketIO(server, {
     	 cors: {
@@ -69,65 +66,95 @@ module.exports = (server) => {
 		
     	// Mockup connection
     	socket.on(identify_mockup, (mockupName) => {
-			//console.log("mockup join: ", mockupName, socket.id);
-			mockups[mockupName] = socket.id;
+	
 			let room = mockupName + "-ROOM";
-			socket.mockupName = mockupName;
-			socket.roomID = room;
-			io.to(socket.id).emit(identify_ok_mockup);
-			socket.join(room);	
-
-			socket.isUser = false;
-			socket.isMockup = true;
-
-			if(n_users > 0){
-				io.to(socket.id).emit(stream_control_web_server_mockup, true);
+			if(!rooms[room]){
+				rooms[room] = {};
 			}
-			const rooms = io.of("/").adapter.rooms;
+
+			rooms[room].mockup = socket.id;
+			socket.isMockup = true;
+			
+			if(!rooms[room].users){
+				rooms[room].users = {};
+			}
+
+			if(!rooms[room].master){
+				rooms[room].master = "";
+			}
+
+			if(!rooms[room].vars){
+				rooms[room].vars = {};
+			}
+
+			rooms[room].n_users = Object.keys(rooms[room].users).length;
+
+			socket.join(room);
+			socket.room = room;
+			io.to(socket.id).emit(identify_ok_mockup);
+
+			const n_users = rooms[room].n_users;
+
+			const mockup = rooms[room].mockup;
+			if (n_users > 0 && mockup){
+				io.to(socket.id).emit(stream_control_web_server_mockup, true)
+			}
 			console.log("------- Connection Event -------");
 			console.log("Rooms: ", rooms);
 
     	});
 
         // Web client connection
-		socket.on(identify_web, (mockupName)=>{
-			socket.isUser = true;
-
-			io.to(socket.id).emit(identify_ok_web);
-			n_users++;
-			//
-			if(n_users < 2){
-				socket.master = true;
-			}
-			else {
-				socket.master = false;
-			}
-
-
-			let username = mockupName + "_" + n_users.toString();
-
-			//console.log("web client join: ", username, socket.id, "Is master?: ", socket.master);
-
+		socket.on(identify_web, (mockupName) => {
+	
 			let room = mockupName + "-ROOM";
-			socket.username = username;
-			socket.roomID = room;
+			if(!rooms[room]){
+				rooms[room] = {};
+			}
+			if(!rooms[room].mockup){
+				rooms[room].mockup = "";
+			}
+
+			socket.room = room;
 			socket.join(room);
+			io.to(socket.id).emit(identify_ok_web);
+
+
+			if(!rooms[room].users){
+				rooms[room].users = {};
+				rooms[room].users[socket.id] = socket;
+			}else{
+				rooms[room].users[socket.id] = socket;
+			}
+			
+			if(!rooms[room].vars){
+				rooms[room].vars = {};
+			}
+
+			rooms[room].n_users = Object.keys(rooms[room].users).length;
+			
+			const n_users = rooms[room].n_users;
+
+			if(n_users < 2){
+				rooms[room].master = socket.id;
+				socket.isMaster = true;
+			}else{
+				socket.isMaster = false;
+			}
 
 			let control = {
 				"viewers": n_users,
-				"isMaster": socket.master
+				"isMaster": socket.isMaster
 			}
 
 			io.to(socket.id).emit(give_control, control);
 
-			users[socket.id] = socket;
-
-			const rooms = io.of("/").adapter.rooms;	
 			console.log("------- Connection Event -------");
 			console.log("Rooms: ", rooms);
 			
-	    	if(n_users > 0){
-	    		io.to(room).emit(stream_control_web_server_mockup, true);
+			const mockup = rooms[room].mockup;
+	    	if(n_users > 0 && mockup){
+	    		io.to(mockup).emit(stream_control_web_server_mockup, true);
 	    	}    
 
 		});
@@ -135,70 +162,70 @@ module.exports = (server) => {
 		/*Video Streaming*/
 		socket.on(stream_video_mockup_server, (frame64) => {
 			//console.log("reciving frame... ");
-			io.to(socket.roomID).emit(stream_video_server_web, frame64);
+			io.to(socket.room).emit(stream_video_server_web, frame64);
 		});
 
 		/*Responses for updates*/
 		socket.on(response_updates_mockup_server, (data) => {
-			console.log("mockup says :", data);
-			io.to(socket.roomID).emit(response_updates_server_web, data);
+			//console.log("mockup says :", data);
+			io.to(socket.room).emit(response_updates_server_web, data);
 		});
 
 		socket.on(response_updates_web_server, (data) => {
-			if(socket.master){
-				vars = data;
-				console.log("I'm the master : ", vars);
-				io.to(socket.roomID).emit(response_updates_server_mockup, data);
-				io.to(socket.roomID).emit(response_updates_server_web, data);
+			if(socket.isMaster){
+				rooms[socket.room].vars = data;
+				io.to(socket.room).emit(response_updates_server_mockup, data);
+				io.to(socket.room).emit(response_updates_server_web, data);
 			}else{
 				
-				if(vars){
-					vars["PlayState"] = data["PlayState"];
-					vars["LightState"] = data["LightState"]
-					console.log("I'm the viewer!", vars);
-					io.to(socket.roomID).emit(response_updates_server_mockup, vars);
-					io.to(socket.roomID).emit(response_updates_server_web, vars);	
+				if(rooms[socket.room].vars){
+					let vars = rooms[socket.room].vars;
+					rooms[socket.room].vars["PlayState"] = data["PlayState"];
+					rooms[socket.room].vars["LightState"] = data["LightState"]
+					console.log("I'm the viewer!", rooms[socket.room].vars);
+					io.to(socket.room).emit(response_updates_server_mockup, vars);
+					io.to(socket.room).emit(response_updates_server_web, vars);	
 				}			
 			}
-			// socket.to(socket.roomID).emit(response_updates_server_mockup, data);
-			// socket.to(socket.roomID).emit(response_updates_server_web, data);
+			// socket.to(socket.room).emit(response_updates_server_mockup, data);
+			// socket.to(socket.room).emit(response_updates_server_web, data);
 
 			
 		});
 
 		socket.on(response_ok_mockup_server, () => {
 			console.log("mockup says ok to server!");
-			io.to(socket.roomID).emit(response_ok_server_web);
+			io.to(socket.room).emit(response_ok_server_web);
 		});
 
 		socket.on(response_ok_web_server, () => {
 			console.log("web says ok to server!");
-			io.to(socket.roomID).emit(response_ok_server_mockup);
+			io.to(socket.room).emit(response_ok_server_mockup);
 		});
 
 		/*Response for requests*/
 		socket.on(request_updates_mockup_server, () => {
 			console.log("*mockup request updates");
-			io.to(socket.roomID).emit(request_updates_server_web);
+			io.to(socket.room).emit(request_updates_server_web);
 		});
 
 		socket.on(request_updates_web_server, () => {
 			console.log("*web request updates");
-			io.to(socket.roomID).emit(request_updates_server_mockup);
+			io.to(socket.room).emit(request_updates_server_mockup);
 		});
 
 		/*Routes for quizes*/
 		socket.on(quiz_mockup_server, (quiz) =>{
-			io.to(socket.roomID).emit(quiz_server_web);
+			io.to(socket.room).emit(quiz_server_web);
 		});
 
 		/*Routes for stop process*/
 		socket.on(stop_web_server, () => {
-			io.to(socket.roomID).emit(stop_server_mockup);
+			io.to(socket.room).emit(stop_server_mockup);
 		});
 
 		socket.on(stop_mockup_server, () => {
-			io.to(socket.roomID).emit(stop_server_web);
+			io.to(socket.room).emit(stop_server_web);
 		});
 
 		/*Routes for erros*/
@@ -209,34 +236,40 @@ module.exports = (server) => {
 
 		// When a user disconnects
 	    socket.on("disconnect", () => {
-	    	if(socket.isUser){
-	    		n_users--;	    		
-	    	}
-
-			delete mockups[socket.mockupName];
-			delete users[socket.id];
-			let keys = Object.keys(users);
-			if(n_users==1){
-
+			delete rooms[socket.room].users[socket.id];
+			rooms[socket.room].n_users = Object.keys(rooms[socket.room].users).length;
+			
+			if(socket.isMaster){
+				let keys = Object.keys(rooms[socket.room].users);
 				if(keys.length > 0){
-					let masterid = keys[0];
-					users[masterid].master = true;
+					rooms[socket.room].master = keys[0];
+					rooms[socket.room].users[keys[0]].isMaster = true;
+					const n_users = rooms[socket.room].n_users;
 					let control = {
 						"viewers": n_users,
 						"isMaster": true
 					}
-					io.to(masterid).emit(give_control, control);
+					io.to(rooms[socket.room].master).emit(give_control, control);
+				}else{
+					rooms[socket.room].master = "";
 				}
+
 			}
+			if(socket.isMockup){
+				rooms[socket.room].mockup = ""
+			}
+
+			
+			const n_users = rooms[socket.room].n_users;
+
 			// if there are not users, stop streaming	    	
 	    	if(n_users < 1){ 
-	    		socket.to(socket.roomID).emit(stream_control_web_server_mockup, false);
-	    		socket.to(socket.roomID).emit(stop_server_mockup);
-	    		n_users = 0;
+	    		io.to(socket.room).emit(stream_control_web_server_mockup, false);
+	    		io.to(socket.room).emit(stop_server_mockup);
 				vars = null;
 	    	}
 
-			const rooms = io.of("/").adapter.rooms;	
+
 			console.log("------- Disconnection Event -------");
 			console.log("Rooms: ", rooms);
 

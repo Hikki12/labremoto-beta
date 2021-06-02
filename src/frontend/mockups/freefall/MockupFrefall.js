@@ -25,7 +25,28 @@ class MockupFreefall extends React.Component {
             restart: React.createRef(),
             playBtn: React.createRef(),
 		}
+		this.minutes = 20*60000;
+		this.closeTimer = setInterval(this.closeApp, this.minutes);
 	}
+
+	closeApp = () => {
+		console.log("Closing app...");
+		this.client.close()
+		this.props.history.push("/home");
+	}
+
+	clearStopTimer(){
+		if(this.closeTimer){
+			clearTimeout(this.closeTimer)
+			this.closeTimer = null;
+		}
+	}
+
+	restartCloseTimer = () => {
+		this.clearStopTimer();
+		this.closeTimer = setInterval(this.closeApp, this.minutes);
+	}
+
 
 	// ---------------------- RANDOM CONDITIONS ----------------------------------
     randomSpeed = () => {
@@ -70,7 +91,8 @@ class MockupFreefall extends React.Component {
 	}
 
 	componentWillUnmount(){
-		this.client.close()
+		this.client.close();
+		this.clearStopTimer();
 	}
 	
 	classHide = () =>{

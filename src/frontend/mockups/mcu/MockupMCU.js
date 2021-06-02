@@ -35,7 +35,28 @@ class MockupMCU extends React.Component {
             recordTime: React.createRef(),
             sliderLabelValue: React.createRef()
 		}
+		this.minutes = 20*60000;
+		this.closeTimer = setInterval(this.closeApp, this.minutes);
 	}
+
+	closeApp = () => {
+		console.log("Closing app...");
+		this.client.close()
+		this.props.history.push("/home");
+	}
+
+	clearStopTimer(){
+		if(this.closeTimer){
+			clearTimeout(this.closeTimer)
+			this.closeTimer = null;
+		}
+	}
+
+	restartCloseTimer = () => {
+		this.clearStopTimer();
+		this.closeTimer = setInterval(this.closeApp, this.minutes);
+	}
+
 
 	// ---------------------- RANDOM CONDITIONS ----------------------------------
     randomSpeed = () => {
@@ -80,7 +101,8 @@ class MockupMCU extends React.Component {
 	}
 
 	componentWillUnmount(){
-		this.client.close()
+		this.client.close();
+		this.clearStopTimer();
 	}
 	
 	classHide = () =>{
@@ -110,6 +132,7 @@ class MockupMCU extends React.Component {
 				vars: data
 			});
 			console.log("Data: ",data)
+			this.restartCloseTimer();
 		// }, 200)
 	}
 
@@ -276,9 +299,9 @@ class MockupMCU extends React.Component {
 				<ToogleButton
 					ref={this.variables.dirBtn}
 					checkedText="HORARIO"
-					onClick={this.sendUpdates}
 					onClass="btn btn-info"
 					offClass="btn btn-outline-info nohover"
+					onClick={this.sendUpdates}
 				>
 					ANTIHORARIO
 				</ToogleButton>
