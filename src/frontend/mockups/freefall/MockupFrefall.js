@@ -1,4 +1,6 @@
 import React from 'react';
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 import ToogleButton from '../../components/ToogleButton';
 import Table from '../../components/Table';
 import RangeSlider from '../../components/RangeSlider';
@@ -14,7 +16,9 @@ class MockupFreefall extends React.Component {
 			video: "",
 			isMaster:false,
             viewers:0,
-            vars: {}
+            vars: {},
+			equation: null,
+			times: ["-", "-", "-"]
 		}
 
 		this.image = React.createRef();
@@ -114,7 +118,7 @@ class MockupFreefall extends React.Component {
 		// setTimeout(()=>{
 			let data = {
 				PlayState: this.variables.playBtn.current.isChecked(),
-				Restart: this.variables.restart.current.isChecked()
+				Restart: false
 			}	
 			this.client.sendToServer(data);	
 			this.setState({
@@ -135,7 +139,11 @@ class MockupFreefall extends React.Component {
 	setRecivedVariables = (variables) => {
 		console.log("Recived Variables: ", variables);
 		this.variables.playBtn.current.setChecked(variables["PlayState"]);
-		this.variables.restart.current.setChecked(variables["Restart"]);
+		// this.variables.restart.current.setChecked(variables["Restart"]);
+		this.setState({
+			equation: variables.equation,
+			times: [variables.dt1, variables.dt2, variables.dt2]
+		});
 		//this.variables.lightBtn.current.setChecked(variables["LightState"]);
 		//this.updateSliderLabel();
 	}
@@ -206,7 +214,7 @@ class MockupFreefall extends React.Component {
 	renderPlayControls = () =>{
 		return(
 			<div className="row text-center mt-4">
-				<div className="col-2 ml-5">
+				<div className="col">
 					<ToogleButton
 						ref={this.variables.playBtn}
 						onClick={this.sendUpdates}
@@ -215,7 +223,7 @@ class MockupFreefall extends React.Component {
 					</ToogleButton>
 				</div>
 				
-				<div className="col-3 ml-2">
+				{/* <div className="col-3 ml-2">
 				<ToogleButton 
 				 	ref={this.variables.restart}
 					onClass="btn btn-info"
@@ -224,7 +232,7 @@ class MockupFreefall extends React.Component {
 				>
 					RESTART
 				</ToogleButton>
-				</div>
+				</div> */}
 			</div>
 		)
 	}
@@ -255,8 +263,11 @@ class MockupFreefall extends React.Component {
 	renderTable = () => {
 		let mode = this.props.match.params.mode;
 		let titles = ["distancia", "0cm", "30cm", "60cm", "90cm"];
-        let rows = ["tiempo(s)"];
+        let rows = ["tiempo(s)"];  
         let cols = [1,2,3,4];
+		let dt = this.state.times;
+		let data = [[0, dt[0], dt[1], dt[2]]];
+		
 		// if(mode == 0 || mode == 2){
         //     titles = ["# Rotaciones", "Tiempo(s)", "Período (s)", "Frecuencia(Hz)"]
         //     rows = [5,10,15,20];
@@ -272,6 +283,7 @@ class MockupFreefall extends React.Component {
 			titles={titles}
 			cols={cols}
 			rows={rows}
+			data={data}
 			/>
 		)
 	}
@@ -312,6 +324,21 @@ class MockupFreefall extends React.Component {
 			</div>
 		)
 	}
+
+	renderEquation = () => {
+		let eqt = this.state.equation;
+		if(!this.state.equation){
+			eqt = "";
+		}
+		return(
+			<div className="my-4">
+				<Latex>
+					{eqt}
+				</Latex>
+			</div>
+		)
+	}
+
 	// MODAL QUIZ ----------------------------------------------
     openQuiz = () => {
 		console.log("Opening.. quiz")
@@ -354,6 +381,7 @@ class MockupFreefall extends React.Component {
 						<div className="card">
 							<div className="p-4">
 								{this.renderTable()}
+								{this.renderEquation()}
 								<button className="btn btn-primary mr-5" onClick={this.openQuiz}>Cuestionario</button>
 								<hr/>
 								{this.renderInstructions()}

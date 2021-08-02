@@ -1,9 +1,12 @@
 import React from 'react';
 
+
 class Table extends React.Component {
     constructor(props){
         super(props);
-        this.data = Array(4).fill(null).map(() => Array(3).fill(0));
+
+        console.log("data to render: ", this.props.data);
+        
         this.titles = [1, 2, 3, 4]
         this.cols = [1, 2, 3];
         this.rows = [2,3,4];
@@ -15,7 +18,7 @@ class Table extends React.Component {
         }
     }
 
-    renderTitles(){
+    renderTitles = () => {
         let titles = this.props.titles;
         if(!this.props.titles){
            titles = this.titles;
@@ -35,7 +38,7 @@ class Table extends React.Component {
         );
     }
 
-    renderCols(){
+    renderCols = (row) => {
         let cols = this.props.cols;
         if(!this.props.cols){
             cols = this.cols;
@@ -43,8 +46,15 @@ class Table extends React.Component {
         return(
             cols.map((col, index) => {
                 return(
+                    
                     <td key={`col-${index}`}>
-                        <input className="text-center" onChange={(e) => this.onChangeTable(row, col, e)}/>
+                        {/* {console.log(`${this.props.data} asds `)} */}
+                        {!this.props.data
+                        ? <input className="text-center" onChange={(e) => this.onChangeTable(row, index, e)}/>
+                        :<input className="text-center" onChange={(e) => this.onChangeTable(row, index, e)} 
+                        value={this.props.data[row][index]} />
+                        }
+                       
                     </td>                    
                 )
             })
@@ -52,7 +62,7 @@ class Table extends React.Component {
 
     }
 
-    renderBody(){
+    renderBody = () => {
         let rows = this.props.rows;
         if(!this.props.rows){
             rows = this.rows;
@@ -62,7 +72,7 @@ class Table extends React.Component {
                 return(
                     <tr key={`row-${index}`}>
                         <th className="text-center" scope="row">{row}</th>
-                        {this.renderCols()}
+                        {this.renderCols(index)}
                     </tr>
                 );
             })
